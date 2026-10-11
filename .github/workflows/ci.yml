@@ -61,6 +61,11 @@ jobs:
           "${VENV_PY}" -m pip install --upgrade pip
           "${VENV_PY}" -m pip install maturin pytest "matplotlib>=3.8"
 
+      - name: Verify release version synchronization
+        if: matrix.python-version != '3.9'
+        shell: bash
+        run: '"${VENV_PY}" scripts/check-release.py'
+
       - name: Verify required original JWC fixtures
         shell: bash
         run: '"${VENV_PY}" scripts/jwc/check_corpus.py'
@@ -147,7 +152,8 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          uv sync --extra plot
+          python scripts/check-release.py
+          uv sync --locked --extra plot
           uv pip install maturin
 
       - name: Verify required original JWC fixtures

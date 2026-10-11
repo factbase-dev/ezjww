@@ -251,7 +251,6 @@ wheels = [
 
 [[package]]
 name = "ezjww"
-version = "0.6.1"
 source = { editable = "." }
 
 [package.optional-dependencies]

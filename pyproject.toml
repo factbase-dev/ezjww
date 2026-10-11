@@ -1,6 +1,6 @@
 [project]
 name = "ezjww"
-version = "0.6.1"
+dynamic = ["version"]
 description = "JWW/JWC reader, JWW writer and DXF converter powered by Rust"
 license = { file = "LICENSE" }
 readme = "README.md"
@@ -24,6 +24,18 @@ exclude = [".internal/**"]
 # Keep every workspace manifest with the shared lockfile. The cargo generator
 # prunes the WASM member while retaining its lock entries, breaking --locked.
 sdist-generator = "git"
+
+[tool.uv]
+# Rebuild editable packages when the Cargo-derived version or Rust sources change.
+cache-keys = [
+    { file = "pyproject.toml" },
+    { file = "Cargo.toml" },
+    { file = "Cargo.lock" },
+    { file = "src/**/*.rs" },
+    { file = "crates/**/Cargo.toml" },
+    { file = "crates/**/*.rs" },
+    { file = "crates/**/*.bin" },
+]
 
 [build-system]
 requires = ["maturin>=1.0,<2.0"]

@@ -182,7 +182,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          uv sync --extra plot
+          uv sync --locked --extra plot
           uv pip install maturin
 
       - name: Verify required original JWC fixtures

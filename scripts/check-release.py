@@ -20,23 +20,43 @@ def check_versions(root=ROOT, tag=None):
         return tomllib.loads((root / path).read_text(encoding="utf-8"))
 
     project = toml("pyproject.toml")["project"]
-    version = project["version"]
-    versions = {"pyproject.toml": version}
+    version = toml("Cargo.toml")["workspace"]["package"]["version"]
+    if "version" in project or "version" not in project.get("dynamic", []):
+        raise ValueError("Python version must be inherited from Cargo.toml")
+    versions = {"Cargo.toml:workspace.package": version}
     for path in (
         "Cargo.toml",
         "crates/ezjww-core/Cargo.toml",
         "crates/ezjww-wasm/Cargo.toml",
     ):
-        versions[path] = toml(path)["package"]["version"]
+        if toml(path)["package"]["version"] != {"workspace": True}:
+            raise ValueError(f"{path} must inherit the workspace version")
     versions["package.json"] = json.loads(
         (root / "packages/ezjww/package.json").read_text()
     )["version"]
     for lock in ("Cargo.lock", "uv.lock"):
+        expected = (
+            {"ezjww", "ezjww-core", "ezjww-wasm"} if lock == "Cargo.lock" else {"ezjww"}
+        )
+        found = []
         for package in toml(lock)["package"]:
-            if package["name"] in {"ezjww", "ezjww-core", "ezjww-wasm"}:
-                versions[lock + ":" + package["name"]] = package["version"]
+            if package["name"] in expected:
+                found.append(package["name"])
+                if lock == "uv.lock":
+                    # uv omits the version of an editable project whose version
+                    # is dynamic; the built wheel is checked independently.
+                    if "version" in package or package.get("source") != {
+                        "editable": "."
+                    }:
+                        raise ValueError(
+                            "uv.lock must use the dynamic editable version"
+                        )
+                else:
+                    versions[lock + ":" + package["name"]] = package["version"]
+        if Counter(found) != Counter(expected):
+            raise ValueError(f"missing or duplicate workspace packages in {lock}")
     if set(versions.values()) != {version} or not re.fullmatch(
-        r"\d+\.\d+\.\d+", version
+        r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", version
     ):
         raise ValueError(
             "release versions differ or are not final versions: " + repr(versions)
@@ -59,9 +79,7 @@ def verify_artifacts(directory, version):
         for n in paths
     )
     if kinds != {"wheel": 4, "sdist": 1, "npm": 1}:
-        raise ValueError(
-            "expected four platform wheels, one sdist and one npm archive"
-        )
+        raise ValueError("expected four platform wheels, one sdist and one npm archive")
     verified = set()
     for report_path in directory.glob("*-verification.json"):
         report = json.loads(report_path.read_text(encoding="utf-8"))

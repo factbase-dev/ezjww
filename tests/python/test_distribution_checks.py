@@ -17,7 +17,8 @@ SDIST = runpy.run_path(str(ROOT / "scripts/check-sdist.py"))
 @pytest.fixture(scope="module")
 def project_version() -> str:
     # JSON works on Python 3.9 without an extra TOML dependency. The release
-    # gate independently checks this version against Python, Rust and lockfiles.
+    # gate independently checks this generated version against the workspace
+    # version and lockfiles, and enforces Python/Rust version inheritance.
     manifest = ROOT / "packages/ezjww/package.json"
     return json.loads(manifest.read_text(encoding="utf-8"))["version"]
 
@@ -84,7 +85,14 @@ def test_publish_gate_requires_matching_versions_and_every_qualified_hash(
     assert release["check_versions"](tag=f"v{project_version}") == project_version
     with pytest.raises(ValueError, match="tag"):
         release["check_versions"](tag=f"v{mismatched_version}")
-    names = ["linux.whl", "macos.whl", "windows.whl", "source.tar.gz", "package.tgz"]
+    names = [
+        "linux.whl",
+        "linux-aarch64.whl",
+        "macos.whl",
+        "windows.whl",
+        "source.tar.gz",
+        "package.tgz",
+    ]
     for index, name in enumerate(names):
         data = name.encode()
         (tmp_path / name).write_bytes(data)
@@ -102,4 +110,7 @@ def test_publish_gate_requires_matching_versions_and_every_qualified_hash(
     (tmp_path / "linux.whl").write_bytes(b"linux.whl")
     (tmp_path / "0-verification.json").unlink()
     with pytest.raises(ValueError, match="missing artifact"):
+        release["verify_artifacts"](tmp_path, project_version)
+    (tmp_path / "linux-aarch64.whl").unlink()
+    with pytest.raises(ValueError, match="four platform wheels"):
         release["verify_artifacts"](tmp_path, project_version)

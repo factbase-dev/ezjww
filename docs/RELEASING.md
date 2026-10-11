@@ -1,15 +1,35 @@
 # Preparing and publishing a release
 
-This checkout prepares **0.6.0**. Creating or merging its preparation PR does not
-publish packages. The [changelog](../CHANGELOG.md) and
+Creating or merging a release preparation PR does not publish packages.
+The [changelog](../CHANGELOG.md) and
 [extension guide](WRITER_EXTENSIONS.md) describe the writer additions. The
 [0.4 migration guide](MIGRATING_0_4.md) still applies when upgrading from 0.3.x.
 
 ## Local qualification
 
-Use Rust, Python 3.11+ with `maturin`/`pip`, Node.js 22.12+ and pnpm 9.15.1.
+Use Rust, uv, Python 3.11+ with `maturin`/`pip`, Node.js 22.12+ and pnpm 9.15.1.
 The distributed Python package continues to support Python 3.9+; only the release
-metadata checker requires `tomllib` from Python 3.11+.
+tooling requires `tomllib` from Python 3.11+.
+
+Set the next version with one command (replace `0.6.2` with the intended version):
+
+```sh
+python scripts/bump-version.py 0.6.2
+```
+
+The source of truth is `[workspace.package].version` in the root `Cargo.toml`.
+All Rust packages [inherit it](https://doc.rust-lang.org/cargo/reference/workspaces.html#the-package-table)
+with `version.workspace = true`; Maturin reads it for Python through
+[`dynamic = ["version"]`](https://www.maturin.rs/metadata.html#dynamic-metadata).
+The command updates the workspace
+version and npm metadata, regenerates Cargo/uv locks without requesting dependency
+upgrades, and checks consistency. uv records the editable package with a dynamic
+version, so `uv.lock` no longer duplicates the release number. Use `--offline`
+when dependencies are already cached. If a step fails, the command restores the
+four files it can modify, including any edits present before it ran. It does not
+commit, create tags or publish packages.
+
+Review the resulting diff, update the changelog, then qualify the release:
 
 ```sh
 python scripts/check-release.py
@@ -19,17 +39,17 @@ cargo fmt --all --check
 python scripts/jwc/check_corpus.py
 python scripts/jww/check_fixtures.py
 maturin build --release --locked --out dist
-python scripts/check-wheel.py --wheel-dir dist --expected-version 0.6.0 --report wheel-verification.json
+python scripts/check-wheel.py --wheel-dir dist --report wheel-verification.json
 maturin sdist --out sdist
-python scripts/check-sdist.py --archive sdist/ezjww-0.6.0.tar.gz --expected-version 0.6.0 --report sdist-verification.json
+python scripts/check-sdist.py --archive sdist/*.tar.gz --report sdist-verification.json
 ```
 
 Run package tests/typechecks, browser build, web-WASM and cross-language checks
 as in [CI](../.github/workflows/ci.yml). From `packages/ezjww`, pack the npm archive
-with `pnpm pack --pack-destination /tmp`; from the repository root verify it:
+with `pnpm pack --pack-destination ../../dist`; from the repository root verify it:
 
 ```sh
-node scripts/check-npm-package.mjs --archive /tmp/ezjww-0.6.0.tgz --expected-version 0.6.0 --report npm-verification.json
+node scripts/check-npm-package.mjs --archive dist/ezjww-*.tgz --report npm-verification.json
 ```
 
 Use fresh output directories so a previous artifact cannot be selected. The
@@ -53,23 +73,25 @@ The [release workflow](../.github/workflows/release.yml) has two modes:
 
 - **Run workflow / `workflow_dispatch`:** build and qualify all artifacts, upload
   them and their JSON reports, and skip both publish jobs. Use this on the
-  preparation branch to inspect Linux/Windows/macOS wheels, sdist and npm output.
+  preparation branch to inspect Linux x86_64/aarch64, Windows and macOS wheels,
+  sdist and npm output.
 - **Push `vX.Y.Z`:** require the tag to match Python, all Cargo packages, npm and
-  lockfile versions; build and qualify every distribution; then publish the exact
-  archives from that run. Both registries wait for all build jobs to pass.
+  Cargo lockfile versions; build and qualify every distribution; then publish
+  the exact archives from that run. Both registries wait for all build jobs to pass.
 
 The publish jobs verify every archive's SHA-256 against its qualification report.
 npm publishes the tested `.tgz` with lifecycle scripts disabled, so `prepack`
 cannot create a different WASM binary during publication. Python publishes the
-tested four platform wheels (Linux x86_64 and aarch64, Windows, macOS) and sdist. OIDC permission is limited to the two
-publish jobs. The existing PyPI token configuration and npm Trusted Publisher
+tested four platform wheels (Linux x86_64 and aarch64, Windows, macOS) and sdist.
+OIDC permission is limited to the two publish jobs. The existing PyPI token
+configuration and npm Trusted Publisher
 account configuration must be available when publishing; branch verification
 does not validate registry credentials. Registry uploads are separate operations,
 so failure at one registry does not roll back the other.
 
-Before a release tag, finalize the changelog date, update all version fields and
-locks together, and pass the branch workflow. The final tag push is the publishing
-action. Afterward, check both registries and installed-package behavior separately;
+Before a release tag, finalize the changelog date, run `scripts/bump-version.py`
+for the intended version, and pass the branch workflow. The final tag push is the
+publishing action. Afterward, check both registries and installed-package behavior separately;
 successful builds or a merged PR alone do not establish publication.
 
 CI's Windows reader/package checks do not run Jw_cad. Retain the Wine/Windows
