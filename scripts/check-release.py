@@ -58,9 +58,9 @@ def verify_artifacts(directory, version):
         "wheel" if n.endswith(".whl") else "sdist" if n.endswith(".tar.gz") else "npm"
         for n in paths
     )
-    if kinds != {"wheel": 3, "sdist": 1, "npm": 1}:
+    if kinds != {"wheel": 4, "sdist": 1, "npm": 1}:
         raise ValueError(
-            "expected three platform wheels, one sdist and one npm archive"
+            "expected four platform wheels, one sdist and one npm archive"
         )
     verified = set()
     for report_path in directory.glob("*-verification.json"):

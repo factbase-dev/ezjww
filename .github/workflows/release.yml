@@ -77,6 +77,10 @@ jobs:
             python-version: "3.13"
             manylinux: 2014
             artifact: linux
+          - os: ubuntu-24.04-arm
+            python-version: "3.13"
+            manylinux: 2014
+            artifact: linux-aarch64
           - os: windows-latest
             python-version: "3.13"
             manylinux: auto

@@ -61,7 +61,7 @@ The [release workflow](../.github/workflows/release.yml) has two modes:
 The publish jobs verify every archive's SHA-256 against its qualification report.
 npm publishes the tested `.tgz` with lifecycle scripts disabled, so `prepack`
 cannot create a different WASM binary during publication. Python publishes the
-tested three platform wheels and sdist. OIDC permission is limited to the two
+tested four platform wheels (Linux x86_64 and aarch64, Windows, macOS) and sdist. OIDC permission is limited to the two
 publish jobs. The existing PyPI token configuration and npm Trusted Publisher
 account configuration must be available when publishing; branch verification
 does not validate registry credentials. Registry uploads are separate operations,
