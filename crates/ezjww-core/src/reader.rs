@@ -8,6 +8,7 @@ use crate::error::JwwError;
 pub struct Reader<'a> {
     cursor: Cursor<&'a [u8]>,
     base_offset: usize,
+    finite_numbers_only: bool,
     decode_diagnostics: Vec<DecodeDiagnostic>,
 }
 
@@ -20,12 +21,20 @@ impl<'a> Reader<'a> {
         Self {
             cursor: Cursor::new(data),
             base_offset,
+            finite_numbers_only: false,
             decode_diagnostics: Vec::new(),
         }
     }
 
     pub fn bytes_read(&self) -> usize {
         self.cursor.position() as usize
+    }
+
+    pub(crate) fn remaining(&self) -> usize {
+        self.cursor
+            .get_ref()
+            .len()
+            .saturating_sub(self.bytes_read())
     }
 
     pub fn skip(&mut self, len: usize) -> Result<(), JwwError> {
@@ -52,11 +61,22 @@ impl<'a> Reader<'a> {
         Ok(u32::from_le_bytes(self.read_exact::<4>()?))
     }
 
+    pub(crate) fn require_finite_numbers(&mut self) {
+        self.finite_numbers_only = true;
+    }
+
     pub fn read_f64(&mut self) -> Result<f64, JwwError> {
-        Ok(f64::from_le_bytes(self.read_exact::<8>()?))
+        let value = f64::from_le_bytes(self.read_exact::<8>()?);
+        if self.finite_numbers_only && !value.is_finite() {
+            return Err(JwwError::InvalidArchive("non-finite entity value"));
+        }
+        Ok(value)
     }
 
     pub fn read_bytes(&mut self, len: usize) -> Result<Vec<u8>, JwwError> {
+        if len > self.remaining() {
+            return Err(JwwError::UnexpectedEof("bytes"));
+        }
         let mut buf = vec![0_u8; len];
         self.read_exact_into(&mut buf)?;
         Ok(buf)

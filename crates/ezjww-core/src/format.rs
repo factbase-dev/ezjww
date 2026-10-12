@@ -10,6 +10,7 @@ use crate::jwc::is_jwc_signature;
 pub enum CadFormat {
     Jww,
     Jwc,
+    Jws,
 }
 
 /// Detect a format family from bytes. A match can still be truncated or use an
@@ -19,6 +20,8 @@ pub fn detect_format(data: &[u8]) -> Option<CadFormat> {
         Some(CadFormat::Jww)
     } else if is_jwc_signature(data) {
         Some(CadFormat::Jwc)
+    } else if crate::is_jws_signature(data) {
+        Some(CadFormat::Jws)
     } else {
         None
     }

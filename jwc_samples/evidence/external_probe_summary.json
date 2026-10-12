@@ -1,0 +1,32 @@
+[
+  {
+    "filename": "hdr_tile_20101108.jwc",
+    "paper_field": "2",
+    "structural_probe": "ValueError: Unexpected header fields or counts",
+    "profile_promoted": false
+  },
+  {
+    "filename": "rw_tile1_20101108.jwc",
+    "paper_field": "2",
+    "structural_probe": "ValueError: Unexpected header fields or counts",
+    "profile_promoted": false
+  },
+  {
+    "filename": "rw_tile2_2018.jwc",
+    "paper_field": "2",
+    "structural_probe": "UnicodeDecodeError: 'cp932' codec can't decode byte 0xf1 in position 5: illegal multibyte sequence",
+    "profile_promoted": false
+  },
+  {
+    "filename": "yane_yuka_20101108.jwc",
+    "paper_field": "2",
+    "structural_probe": "ValueError: Unexpected header fields or counts",
+    "profile_promoted": false
+  },
+  {
+    "filename": "A_001.jwc",
+    "paper_field": "4",
+    "structural_probe": "KeyError: 4",
+    "profile_promoted": false
+  }
+]

@@ -437,6 +437,7 @@ export interface DxfDocument {
   blocks: DxfBlock[];
   unsupported_entities: string[];
   jwc_conversion_report?: JwcConversionReport;
+  jws_conversion_report?: JwsConversionReport;
   text_width_factors?: number[];
 }
 
@@ -478,8 +479,8 @@ export function isJwcFile(input: CadInput): boolean {
   return wasm.isJwcFile(toUint8Array(input));
 }
 
-export function detectFileFormat(input: CadInput): "jww" | "jwc" | null {
-  return wasm.detectFileFormat(toUint8Array(input)) as "jww" | "jwc" | null;
+export function detectFileFormat(input: CadInput): "jww" | "jwc" | "jws" | null {
+  return wasm.detectFileFormat(toUint8Array(input)) as "jww" | "jwc" | "jws" | null;
 }
 
 export function readJwcHeader(input: CadInput): JwcHeader {
@@ -488,6 +489,36 @@ export function readJwcHeader(input: CadInput): JwcHeader {
 
 export function readJwcDocument(input: CadInput): JwcDocument {
   return wasm.readJwcDocument(toUint8Array(input)) as JwcDocument;
+}
+
+export function isJwsFile(input: CadInput): boolean {
+  return wasm.isJwsFile(toUint8Array(input));
+}
+export function readJwsHeader(input: CadInput): JwsHeader {
+  return wasm.readJwsHeader(toUint8Array(input)) as JwsHeader;
+}
+export function readJwsDocument(input: CadInput): JwsDocument {
+  return wasm.readJwsDocument(toUint8Array(input)) as JwsDocument;
+}
+export interface JwsHeader {
+  version: number;
+  origin: { x: number; y: number };
+  group_scales: number[];
+  bounds_min: { x: number; y: number };
+  bounds_max: { x: number; y: number };
+  reserved_prefix: number[];
+  reserved_integers: number[];
+  reserved_reals: number[];
+}
+export interface JwsDocument extends Omit<JwwDocument, "header"> {
+  header: JwsHeader;
+}
+export interface JwsConversionReport {
+  coordinate_space: "paper_millimeters";
+  origin: { x: number; y: number };
+  group_scales: number[];
+  rendering_policy: string;
+  omitted_image_references: number;
 }
 
 export function readCadDocument(input: CadInput): CadDocument {
@@ -760,7 +791,8 @@ export interface JwcCadDocument {
   document: JwcDocument;
 }
 
-export type CadDocument = JwwCadDocument | JwcCadDocument;
+export interface JwsCadDocument { format: "jws"; document: JwsDocument; }
+export type CadDocument = JwwCadDocument | JwcCadDocument | JwsCadDocument;
 
 export interface JwwWriteConversion {
   document: JwwWriteDocument | null;

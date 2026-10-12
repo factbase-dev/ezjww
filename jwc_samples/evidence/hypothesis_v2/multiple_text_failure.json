@@ -1,0 +1,7 @@
+{
+  "case_id": "r000",
+  "input_sha256": "288ee83635886f6725629542b7a414dc33bf92363154d7986f6b00419b39e80a",
+  "result": "ValueError: Truncated text at 2463",
+  "role": "new_candidate_not_holdout",
+  "cause": "V2 assumed inline text content instead of a shared string pool"
+}

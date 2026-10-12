@@ -3,7 +3,7 @@
 `ezjww` reads Jw_cad drawings, creates JWW files and converts drawings to DXF. Its Rust core is
 available through Python and TypeScript/WebAssembly.
 
-- Read JWW files and a [limited binary JWC profile](https://github.com/monozukuri-ai/ezjww/blob/main/docs/JWC_FORMAT.md).
+- Read JWW files, [JWS registered symbols](https://github.com/monozukuri-ai/ezjww/blob/main/docs/JWS_FORMAT.md), and a [limited binary JWC profile](https://github.com/monozukuri-ai/ezjww/blob/main/docs/JWC_FORMAT.md).
 - Create new version-700 JWW drawings with basic geometry and text (Python/TypeScript/Rust).
 - Read and write the images embedded in version-700 files (`^@BM` placements).
 - Inspect source records, headers, layers, and parsing diagnostics.
@@ -14,6 +14,8 @@ available through Python and TypeScript/WebAssembly.
 This checkout prepares **0.5.0**, adding SXF color/line tables, solids, ellipses,
 dimensions, blocks and convenience APIs to the writer introduced in 0.4.0.
 Build from source until 0.5.0 is published.
+
+JWS reading is available in this source checkout. See the [JWS guide](https://github.com/monozukuri-ai/ezjww/blob/main/docs/JWS_FORMAT.md) for supported versions, coordinates and image limits.
 
 ## Installation
 
@@ -45,8 +47,8 @@ pip install .
 
 ## Python quick start
 
-`readfile` detects JWW or JWC from the file contents. Replace `drawing.jww`
-with your input path; the same API accepts supported `.jwc` files.
+`readfile` detects JWW, JWC or JWS from the file contents. Replace `drawing.jww`
+with your input path; the same API accepts supported `.jwc` and `.jws` files.
 
 ```python
 import ezjww
@@ -237,7 +239,7 @@ ezjww plot drawing.jwc -o drawing.png
 Use `ezjww --help` or `ezjww <command> --help` for options. Audit/report commands
 support `--fail-on-issues` for automation. Rendering requires `ezjww[plot]`.
 
-Directory conversion finds `.jww` and `.jwc` case-insensitively and preserves
+Directory conversion finds `.jww`, `.jwc` and `.jws` case-insensitively and preserves
 subdirectories. If inputs would share an output name (for example, `a.jww` and
 `a.jwc`), it exits with code 2 before writing any converted files.
 

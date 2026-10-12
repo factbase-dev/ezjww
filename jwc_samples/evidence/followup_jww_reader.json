@@ -1,0 +1,7 @@
+{
+  "repository_revision": "dcfb79490a0098b939a22680bdddbfffd380c9de",
+  "build_command": "maturin build --interpreter .venv/bin/python --out /tmp/ezjww-jwc-p0-20260905/followup-wheels",
+  "wheel": "ezjww-0.2.13-cp39-abi3-manylinux_2_34_x86_64.whl",
+  "sha256": "87039be47e182b75525982aacd40993cda1b3625d7bb8c351d30055e6f98cdc0",
+  "purpose": "Read native JWW references; JWC parser is still unimplemented"
+}

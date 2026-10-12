@@ -329,6 +329,7 @@ class _DxfDocumentGeometry(TypedDict):
 
 class DxfDocument(_DxfDocumentGeometry, total=False):
     jwc_conversion_report: JwcConversionReport
+    jws_conversion_report: JwsConversionReport
     text_width_factors: list[float]
 
 JwcCoordinateSpace: TypeAlias = Literal["paper_millimeters", "model_millimeters"]
@@ -495,6 +496,34 @@ class JwcConversionReport(TypedDict):
     notices: list[JwcConversionNotice]
     diagnostics: list[DecodeDiagnostic]
 
+class JwsHeader(TypedDict):
+    version: int
+    origin: JwcCoord
+    group_scales: list[float]
+    bounds_min: JwcCoord
+    bounds_max: JwcCoord
+    reserved_prefix: list[int]
+    reserved_integers: list[int]
+    reserved_reals: list[float]
+
+class JwsConversionReport(TypedDict):
+    coordinate_space: Literal["paper_millimeters"]
+    origin: JwcCoord
+    group_scales: list[float]
+    rendering_policy: str
+    omitted_image_references: int
+
+class JwsDocument(TypedDict):
+    header: JwsHeader
+    entities: list[JwwEntity]
+    metadata_settings: list[MetadataSetting]
+    block_defs: list[BlockDef]
+    images: list[EmbeddedImage]
+    block_def_names: dict[int, str]
+    entity_counts: dict[str, int]
+    validation: BlockReferenceValidation
+    diagnostics: list[DecodeDiagnostic]
+
 class JwwCadDocument(TypedDict):
     format: Literal["jww"]
     document: JwwDocument
@@ -503,7 +532,11 @@ class JwcCadDocument(TypedDict):
     format: Literal["jwc"]
     document: JwcDocument
 
-CadDocument: TypeAlias = JwwCadDocument | JwcCadDocument
+class JwsCadDocument(TypedDict):
+    format: Literal["jws"]
+    document: JwsDocument
+
+CadDocument: TypeAlias = JwwCadDocument | JwcCadDocument | JwsCadDocument
 
 class JwcDxfWriteReport(TypedDict):
     source_format: Literal["jwc"]
@@ -525,6 +558,14 @@ class JwcDxfWriteReport(TypedDict):
     validation: BlockReferenceValidation
     jwc_conversion_report: JwcConversionReport
 
+class JwsDxfWriteReport(DxfWriteReport):
+    source_format: Literal["jws"]
+    jws_conversion_report: JwsConversionReport
+
+def is_jws_file(path: str) -> bool: ...
+def read_jws_header(path: str) -> JwsHeader: ...
+def read_jws_document(path: str) -> JwsDocument: ...
+
 def hello_from_bin() -> str: ...
 def image_reference(content: str) -> ImageReference | None: ...
 def image_reference_content(
@@ -534,7 +575,7 @@ def is_jww_file(path: str) -> bool: ...
 def read_header(path: str) -> JwwHeader: ...
 def read_document(path: str) -> JwwDocument: ...
 def is_jwc_file(path: str) -> bool: ...
-def detect_file_format(path: str) -> Literal["jww", "jwc"] | None: ...
+def detect_file_format(path: str) -> Literal["jww", "jwc", "jws"] | None: ...
 def read_jwc_header(path: str) -> JwcHeader: ...
 def read_jwc_document(path: str) -> JwcDocument: ...
 def read_cad_document(path: str) -> CadDocument: ...
@@ -574,7 +615,7 @@ def write_dxf_with_report(
     text_em_scale: float = 1.0,
     *,
     jwc_coordinates: JwcCoordinateSpace = "paper_millimeters",
-) -> DxfWriteReport | JwcDxfWriteReport: ...
+) -> DxfWriteReport | JwcDxfWriteReport | JwsDxfWriteReport: ...
 
 
 class JwwWriteOptions(TypedDict):

@@ -27,6 +27,9 @@ REQUIRED = {
     "Cargo.toml",
     "Cargo.lock",
     "src/lib.rs",
+    "src/jws_bindings.rs",
+    "crates/ezjww-core/src/jws/mod.rs",
+    "jws_samples/native/unicode_v700.jws",
     "src/ezjww/__init__.py",
     "src/ezjww/_core.pyi",
     "src/ezjww/py.typed",
@@ -172,7 +175,7 @@ def main():
     )
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print("Source distribution build and installed JWW/JWC checks passed.")
+    print("Source distribution build and installed JWW/JWC/JWS checks passed.")
 
 
 if __name__ == "__main__":

@@ -27,6 +27,9 @@ from ezjww._core import (
     image_reference,
     image_reference_content,
     is_jwc_file,
+    is_jws_file,
+    read_jws_header,
+    read_jws_document,
     is_jww_file,
     read_cad_document,
     read_document,
@@ -73,6 +76,9 @@ __all__ = [
     "detect_file_format",
     "hello_from_bin",
     "is_jwc_file",
+    "is_jws_file",
+    "read_jws_header",
+    "read_jws_document",
     "read_cad_document",
     "read_jwc_document",
     "read_jwc_header",
@@ -147,7 +153,7 @@ class Drawing:
         jww_document: dict[str, Any] | None = None,
         dxf_document: dict[str, Any] | None = None,
         source_document: dict[str, Any] | None = None,
-        source_format: Literal["jww", "jwc"] | None = None,
+        source_format: Literal["jww", "jwc", "jws"] | None = None,
         jwc_coordinates: JwcCoordinateSpace = "paper_millimeters",
     ) -> None:
         if jwc_coordinates not in {"paper_millimeters", "model_millimeters"}:
@@ -160,8 +166,8 @@ class Drawing:
                     "jww_document conflicts with source_document/source_format"
                 )
             source_document, source_format = jww_document, "jww"
-        if source_format not in {None, "jww", "jwc"}:
-            raise ValueError("source_format must be jww, jwc or None")
+        if source_format not in {None, "jww", "jwc", "jws"}:
+            raise ValueError("source_format must be jww, jwc, jws or None")
         if (source_document is None) != (source_format is None):
             raise ValueError(
                 "source_document and source_format must be supplied together"
@@ -233,15 +239,15 @@ class Drawing:
         return self._source_document
 
     @property
-    def source_format(self) -> Literal["jww", "jwc"] | None:
+    def source_format(self) -> Literal["jww", "jwc", "jws"] | None:
         return self._source_format
 
     @property
     def images(self) -> list[dict[str, Any]]:
-        """Image files embedded in a version-700 JWW (name, raw bytes, compressed)."""
-        if self._jww_document is None:
+        """Embedded image files retained by the source reader."""
+        if self.source_document is None:
             return []
-        return list(self._jww_document.get("images", []) or [])
+        return list(self.source_document.get("images", []) or [])
 
     @property
     def jwc_coordinates(self) -> JwcCoordinateSpace:
@@ -393,6 +399,9 @@ class Drawing:
         if self._source_format == "jwc":
             result["source_format"] = "jwc"
             result["jwc_conversion_report"] = dxf["jwc_conversion_report"]
+        elif self._source_format == "jws":
+            result["source_format"] = "jws"
+            result["jws_conversion_report"] = dxf["jws_conversion_report"]
         return result
 
     def bbox(
@@ -444,6 +453,9 @@ class Drawing:
         if self._source_format == "jwc":
             result["source_format"] = "jwc"
             result["jwc_conversion_report"] = dxf["jwc_conversion_report"]
+        elif self._source_format == "jws":
+            result["source_format"] = "jws"
+            result["jws_conversion_report"] = dxf["jws_conversion_report"]
         return result
 
     def to_dxf_string(
@@ -1386,7 +1398,7 @@ def _build_parser() -> argparse.ArgumentParser:
     audit_cmd = subparsers.add_parser(
         "audit", help="run conversion-oriented health checks"
     )
-    audit_cmd.add_argument("path", help="input .jww/.jwc file")
+    audit_cmd.add_argument("path", help="input .jww/.jwc/.jws file")
     audit_cmd.add_argument(
         "--json", action="store_true", help="print audit result as JSON"
     )
@@ -1408,7 +1420,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     bbox_cmd = subparsers.add_parser("bbox", help="calculate drawing extents")
-    bbox_cmd.add_argument("path", help="input .jww/.jwc file")
+    bbox_cmd.add_argument("path", help="input .jww/.jwc/.jws file")
     bbox_cmd.add_argument("--json", action="store_true", help="print extents as JSON")
     bbox_cmd.add_argument(
         "--explode-inserts",
@@ -1425,7 +1437,7 @@ def _build_parser() -> argparse.ArgumentParser:
     stats_cmd = subparsers.add_parser(
         "stats", help="show entity distribution statistics"
     )
-    stats_cmd.add_argument("path", help="input .jww/.jwc file")
+    stats_cmd.add_argument("path", help="input .jww/.jwc/.jws file")
     stats_cmd.add_argument(
         "--json", action="store_true", help="print statistics as JSON"
     )
@@ -1444,7 +1456,7 @@ def _build_parser() -> argparse.ArgumentParser:
     report_cmd = subparsers.add_parser(
         "report", help="emit combined audit+bbox+stats report"
     )
-    report_cmd.add_argument("path", help="input .jww/.jwc file")
+    report_cmd.add_argument("path", help="input .jww/.jwc/.jws file")
     report_cmd.add_argument("--json", action="store_true", help="print report as JSON")
     report_cmd.add_argument(
         "--fail-on-issues",
@@ -1463,12 +1475,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="maximum block nesting depth for INSERT expansion",
     )
 
-    info = subparsers.add_parser("info", help="show JWW/JWC summary")
-    info.add_argument("path", help="input .jww/.jwc file")
+    info = subparsers.add_parser("info", help="show JWW/JWC/JWS summary")
+    info.add_argument("path", help="input .jww/.jwc/.jws file")
     info.add_argument("--json", action="store_true", help="print as JSON")
 
-    to_dxf = subparsers.add_parser("to-dxf", help="convert single JWW/JWC to DXF")
-    to_dxf.add_argument("path", help="input .jww/.jwc file")
+    to_dxf = subparsers.add_parser("to-dxf", help="convert single JWW/JWC/JWS to DXF")
+    to_dxf.add_argument("path", help="input .jww/.jwc/.jws file")
     to_dxf.add_argument(
         "-o", "--output", help="output .dxf path (default: input stem + .dxf)"
     )
@@ -1500,9 +1512,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     to_dxf_dir = subparsers.add_parser(
-        "to-dxf-dir", help="convert all .jww/.jwc files in a directory"
+        "to-dxf-dir", help="convert all .jww/.jwc/.jws files in a directory"
     )
-    to_dxf_dir.add_argument("input_dir", help="directory containing .jww/.jwc files")
+    to_dxf_dir.add_argument("input_dir", help="directory containing .jww/.jwc/.jws files")
     to_dxf_dir.add_argument("-o", "--output-dir", help="output directory")
     to_dxf_dir.add_argument(
         "-r", "--recursive", action="store_true", help="scan subdirectories recursively"
@@ -1537,8 +1549,8 @@ def _build_parser() -> argparse.ArgumentParser:
         help="em box the target renderer draws per unit of text height",
     )
 
-    plot = subparsers.add_parser("plot", help="render JWW/JWC to image with matplotlib")
-    plot.add_argument("path", help="input .jww/.jwc file")
+    plot = subparsers.add_parser("plot", help="render JWW/JWC/JWS to image with matplotlib")
+    plot.add_argument("path", help="input .jww/.jwc/.jws file")
     plot.add_argument(
         "-o",
         "--output",
@@ -1622,7 +1634,7 @@ def _collect_jww_files(input_dir: Path, recursive: bool) -> list[Path]:
     return sorted(
         path
         for path in iterator
-        if path.is_file() and path.suffix.lower() in {".jww", ".jwc"}
+        if path.is_file() and path.suffix.lower() in {".jww", ".jwc", ".jws"}
     )
 
 
@@ -2122,12 +2134,12 @@ def _run(argv: list[str] | None = None) -> int:
             doc = cad["document"]
             if args.json:
                 _print_json(
-                    doc if cad["format"] == "jww" else {**doc, "source_format": "jwc"}
+                    doc if cad["format"] == "jww" else {**doc, "source_format": cad["format"]}
                 )
                 return 0
             print(f"file: {args.path}")
             print(f"format: {cad['format']}")
-            if cad["format"] == "jww":
+            if cad["format"] in {"jww", "jws"}:
                 print(f"version: {doc['header']['version']}")
             else:
                 print(f"source_version: {doc['header']['source_version'] or 'unknown'}")
@@ -2254,7 +2266,7 @@ def _run(argv: list[str] | None = None) -> int:
 
     files = _collect_jww_files(input_dir, args.recursive)
     if not files:
-        print(f"no .jww/.jwc files found in {input_dir}", file=sys.stderr)
+        print(f"no .jww/.jwc/.jws files found in {input_dir}", file=sys.stderr)
         return 1
 
     output_dir = Path(args.output_dir) if args.output_dir else input_dir

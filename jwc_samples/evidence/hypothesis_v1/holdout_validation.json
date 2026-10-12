@@ -1,0 +1,92 @@
+{
+  "profile_promoted": false,
+  "rule_changed_after_freeze": false,
+  "cases": [
+    {
+      "id": "q080",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            1.0044878536064061e-05,
+            6.892966496252484e-06,
+            1.826341542709997e-05,
+            6.244909798169829e-06
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q081",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            8.630936690678936e-06,
+            1.1429363269144233e-05
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q082",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            7.128623451535532e-06,
+            9.927050030000828e-06
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q083",
+      "role": "holdout",
+      "passed": false,
+      "error": "q083: layer mismatch",
+      "profile_promoted": false
+    }
+  ]
+}

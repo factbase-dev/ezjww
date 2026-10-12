@@ -65,6 +65,7 @@ pub fn jwc_document_to_dto(document: &crate::JwcDocument) -> JwcDocumentDto<'_> 
 pub enum CadDocumentDto<'a> {
     Jww(JwwDocumentDto<'a>),
     Jwc(JwcDocumentDto<'a>),
+    Jws(JwsDocumentDto<'a>),
 }
 
 pub fn cad_document_to_dto(document: &crate::CadDocument) -> CadDocumentDto<'_> {
@@ -73,6 +74,7 @@ pub fn cad_document_to_dto(document: &crate::CadDocument) -> CadDocumentDto<'_> 
             jww_document_to_dto_with_diagnostics(&parsed.document, &parsed.diagnostics),
         ),
         crate::CadDocument::Jwc(doc) => CadDocumentDto::Jwc(jwc_document_to_dto(doc)),
+        crate::CadDocument::Jws(doc) => CadDocumentDto::Jws(jws_document_to_dto(doc)),
     }
 }
 
@@ -271,5 +273,34 @@ mod tests {
             line_types: None,
             text_presets: None,
         }
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct JwsDocumentDto<'a> {
+    #[serde(flatten)]
+    pub document: &'a crate::JwsDocument,
+    pub entity_counts: BTreeMap<String, usize>,
+    #[serde(serialize_with = "serialize_block_def_names")]
+    pub block_def_names: BTreeMap<u32, String>,
+    pub validation: BlockReferenceValidationDto,
+    pub metadata_settings: Vec<MetadataSetting>,
+}
+pub fn jws_document_to_dto(doc: &crate::JwsDocument) -> JwsDocumentDto<'_> {
+    let v = doc.validate_block_references();
+    JwsDocumentDto {
+        document: doc,
+        entity_counts: entity_counts(&doc.entities)
+            .into_iter()
+            .map(|(k, v)| (k.into(), v))
+            .collect(),
+        block_def_names: block_def_name_map(&doc.block_defs).into_iter().collect(),
+        validation: BlockReferenceValidationDto {
+            total_references: v.total_references,
+            resolved_references: v.resolved_references,
+            has_unresolved: v.has_unresolved(),
+            unresolved_def_numbers: v.unresolved_def_numbers,
+        },
+        metadata_settings: collect_metadata_settings(&doc.entities),
     }
 }

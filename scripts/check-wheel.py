@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install a wheel in a fresh external venv and check its JWW/JWC API and CLI."""
+"""Install a wheel in a fresh external venv and check its JWW/JWC/JWS API and CLI."""
 
 import argparse
 import hashlib
@@ -65,6 +65,15 @@ def probe(work):
         Path(module.__file__).resolve().relative_to(prefix)
     package = Path(ezjww.__file__).parent
     assert (package / "py.typed").is_file() and (package / "_core.pyi").is_file()
+    jws = str(work / "symbol.jws")
+    symbol = ezjww.readfile(jws)
+    assert symbol.source_format == "jws"
+    assert symbol.header == ezjww.read_jws_header(jws)
+    assert ezjww.is_jws_file(jws)
+    assert symbol.source_document["entities"][2]["content"] == "日本語𠮷ｶﾅ ABC"
+    assert symbol.bbox() is not None
+    assert symbol.to_dxf()["jws_conversion_report"]["coordinate_space"] == "paper_millimeters"
+    assert "AC1024" in symbol.to_dxf_string(target_version="AC1024")
     source = str(work / "q032.jwc")
     jww = str(work / "Test1.jww")
     cad = ezjww.read_cad_document(source)
@@ -272,6 +281,7 @@ def probe(work):
             "exact native-qualified mixed geometry bytes and saveas migration",
             "extended entities, COLORREF allocation and bounded reader conversion",
             "Japanese JWC",
+            "Unicode JWS header/source/Drawing/DXF APIs",
             "both coordinate spaces",
             "ellipse",
             "DXF AC1024",
@@ -344,6 +354,7 @@ def main():
         shutil.copyfile(ROOT / "jww_samples/writer/empty.jww", work / "empty.jww")
         shutil.copyfile(ROOT / "jww_samples/writer/basic/basic.jww", work / "basic.jww")
         script = work / "probe.py"
+        shutil.copyfile(ROOT / "jws_samples/native/unicode_v700.jws", work / "symbol.jws")
         shutil.copyfile(__file__, script)
         local_report = work / "validation.json"
         run(
@@ -371,7 +382,7 @@ def main():
     args.report.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    print("Installed wheel JWW/JWC API and CLI smoke passed.")
+    print("Installed wheel JWW/JWC/JWS API and CLI smoke passed.")
 
 
 if __name__ == "__main__":

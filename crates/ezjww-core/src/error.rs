@@ -15,6 +15,8 @@ pub enum JwwError {
     /// A serialized reference to an already-loaded object (MFC object tag), which the
     /// entity list never contains in files written by Jw_cad.
     UnsupportedObjectReference(u32),
+    /// Structurally invalid MFC archive framing (used by strict symbol readers).
+    InvalidArchive(&'static str),
 }
 
 impl Display for JwwError {
@@ -36,6 +38,7 @@ impl Display for JwwError {
             Self::UnsupportedObjectReference(tag) => {
                 write!(f, "unsupported object reference tag: {tag}")
             }
+            Self::InvalidArchive(reason) => write!(f, "invalid archive: {reason}"),
         }
     }
 }
@@ -56,6 +59,7 @@ pub enum CadError {
     Io(std::io::Error),
     Jww(JwwError),
     Jwc(crate::jwc::JwcError),
+    Jws(crate::JwsError),
     UnknownFormat,
 }
 
@@ -65,6 +69,7 @@ impl Display for CadError {
             Self::Io(error) => Display::fmt(error, f),
             Self::Jww(error) => Display::fmt(error, f),
             Self::Jwc(error) => Display::fmt(error, f),
+            Self::Jws(error) => Display::fmt(error, f),
             Self::UnknownFormat => f.write_str("unrecognized CAD format"),
         }
     }
@@ -76,6 +81,7 @@ impl Error for CadError {
             Self::Io(error) => Some(error),
             Self::Jww(error) => Some(error),
             Self::Jwc(error) => Some(error),
+            Self::Jws(error) => Some(error),
             Self::UnknownFormat => None,
         }
     }
@@ -90,5 +96,11 @@ impl From<JwwError> for CadError {
 impl From<crate::jwc::JwcError> for CadError {
     fn from(error: crate::jwc::JwcError) -> Self {
         Self::Jwc(error)
+    }
+}
+
+impl From<crate::JwsError> for CadError {
+    fn from(error: crate::JwsError) -> Self {
+        Self::Jws(error)
     }
 }

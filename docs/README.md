@@ -1,6 +1,6 @@
 # ezjww documentation
 
-`ezjww` provides Python and TypeScript APIs for reading JWW and supported JWC
+`ezjww` provides Python and TypeScript APIs for reading JWW/JWS and supported JWC
 drawings, creating new JWW drawings, and converting them to DXF.
 
 | Guide | Use it to |
@@ -8,6 +8,7 @@ drawings, creating new JWW drawings, and converting them to DXF.
 | [Getting started](../README.md) | Install the package, read a drawing, convert files, and render previews |
 | [API reference](JWC_API.md) | Choose JWW/JWC readers and understand source data, DXF results, and errors |
 | [JWC support and limits](JWC_FORMAT.md) | Check supported geometry, coordinate systems, and rendering defaults |
+| [JWS registered symbols](JWS_FORMAT.md) | Read symbol headers and geometry, with explicit coordinate and image limits |
 | [Diagnostics](DIAGNOSTICS.md) | Handle stable issue codes and decoding warnings |
 | [JWW signature](JWW_SIGNATURE.md) | Detect the JWW binary prefix |
 | [JWW writing (Python/TypeScript/Rust)](JWW_WRITE.md) | Generate version-700 drawings with basic geometry, text and layer settings |

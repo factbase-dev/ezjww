@@ -1,0 +1,18 @@
+{
+  "frozen_at_utc": "2026-09-05T13:39:08.110942+00:00",
+  "status": "experimental_not_promoted",
+  "candidate_cases": 46,
+  "holdout_ids": [
+    "q080",
+    "q081",
+    "q082",
+    "q083"
+  ],
+  "holdout_native_outputs_exist": false,
+  "files": {
+    "scripts/jwc/inspect_fixture.py": "966ff1f50d83875460229af50f284c8b59a9e939aeab232037420b622b50660e",
+    "scripts/jwc/verify_fixtures.py": "644caf9fa45e3043957ccfb9f93942ccd081d8daf26fe5951560da98250dff6c",
+    "jwc_samples/cases.json": "24f073ff93062550bf9bcae6c6159f8e8f9ab391c38d96231686e5626360e68d"
+  },
+  "checks": "Counts, boundaries, paper/scale, known geometry, basic pen/layer attributes, text bytes and angle, native DXF ENTITIES geometry; remaining text/header semantics are not certified."
+}

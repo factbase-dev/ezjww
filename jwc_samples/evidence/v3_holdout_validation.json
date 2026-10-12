@@ -1,0 +1,33 @@
+{
+  "profile_promoted": false,
+  "cases": [
+    {
+      "id": "r080",
+      "role": "holdout",
+      "passed": false,
+      "error": "Non-contiguous or invalid string reference at 2483",
+      "profile_promoted": false
+    },
+    {
+      "id": "r081",
+      "role": "holdout",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "ellipse_line_segments": 38
+      }
+    }
+  ]
+}

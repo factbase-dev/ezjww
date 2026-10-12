@@ -1,11 +1,13 @@
 # ezjww for TypeScript
 
-Read JWW and supported JWC drawings, create new JWW drawings, and export DXF
+Read JWW/JWS and supported JWC drawings, create new JWW drawings, and export DXF
 with a Rust parser compiled to WebAssembly.
 
 This checkout prepares **0.5.0**, adding SXF color/line tables, solids, ellipses,
 dimensions, blocks and convenience APIs to the writer introduced in 0.4.0.
 Build from source until 0.5.0 is published.
+
+JWS reading is available in this source checkout. See the [JWS guide](https://github.com/monozukuri-ai/ezjww/blob/main/docs/JWS_FORMAT.md) for supported versions, coordinates and image limits.
 
 ## Installation
 
@@ -21,8 +23,8 @@ npm install ezjww
 import { readFileSync, writeFileSync } from "node:fs";
 import { detectFileFormat, readCadDocument, readDxfDocument, readDxfString } from "ezjww";
 
-const data = readFileSync("drawing.jwc"); // also accepts JWW
-console.log(detectFileFormat(data));     // "jww", "jwc", or null
+const data = readFileSync("drawing.jwc"); // also accepts JWW and JWS
+console.log(detectFileFormat(data));     // "jww", "jwc", "jws", or null
 
 const cad = readCadDocument(data);
 if (cad.format === "jwc") {

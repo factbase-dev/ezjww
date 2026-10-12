@@ -13,6 +13,7 @@ use crate::{
 pub enum CadDocument {
     Jww(Box<ParsedJwwDocument>),
     Jwc(Box<JwcDocument>),
+    Jws(Box<crate::JwsDocument>),
 }
 
 pub fn parse_cad_document(data: &[u8]) -> Result<CadDocument, CadError> {
@@ -21,6 +22,7 @@ pub fn parse_cad_document(data: &[u8]) -> Result<CadDocument, CadError> {
             data,
         )?))),
         Some(CadFormat::Jwc) => Ok(CadDocument::Jwc(Box::new(parse_jwc_document(data)?))),
+        Some(CadFormat::Jws) => Ok(CadDocument::Jws(Box::new(crate::parse_jws_document(data)?))),
         None => Err(CadError::UnknownFormat),
     }
 }
@@ -42,6 +44,9 @@ pub fn read_cad_document_from_file(path: impl AsRef<Path>) -> Result<CadDocument
         Some(CadFormat::Jwc) => Ok(CadDocument::Jwc(Box::new(read_jwc_document_from_file(
             path,
         )?))),
+        Some(CadFormat::Jws) => Ok(CadDocument::Jws(Box::new(
+            crate::read_jws_document_from_file(path)?,
+        ))),
         None => Err(CadError::UnknownFormat),
     }
 }

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "application": {
+    "name": "Jw_cad",
+    "version": "10.02.1",
+    "sha256": "95e6b11c4ee014e0079f288429ae2c6e5eed41141a963e4b8770d2e8ead87acf",
+    "platform": "Wine on Linux / Xvfb; not native Windows"
+  },
+  "origin": [
+    10,
+    20
+  ],
+  "cases": [
+    {
+      "path": "native/basic_v600.jws",
+      "sha256": "e0fe69555566167dcd525ceb4513f9156305f5f78ceed174bc8bc8a3de511c95",
+      "size": 656,
+      "version": 600,
+      "source": "inputs/basic.jww",
+      "source_sha256": "1b14e07409622e065d9e7d68e1ef1443d0523a4fe3b4ec5836872474217a30b7"
+    },
+    {
+      "path": "native/basic_v700.jws",
+      "sha256": "2519743d0b6755f0483863860a38cc4007726f0a524078cd4b5040ac60ca8df1",
+      "size": 656,
+      "version": 700,
+      "source": "inputs/basic.jww",
+      "source_sha256": "1b14e07409622e065d9e7d68e1ef1443d0523a4fe3b4ec5836872474217a30b7"
+    },
+    {
+      "path": "native/scales_v700.jws",
+      "sha256": "82d569925b95f20476aefa6b6a63bbc7cb4e2b5413bb2f4cba02bc7fd5a70855",
+      "size": 615,
+      "version": 700,
+      "source": "inputs/scales.jww",
+      "source_sha256": "ae32256f36c35338b972e423044704f651217d2a3c2bf513db8cde98ad655ebe"
+    },
+    {
+      "path": "native/geometry_v700.jws",
+      "sha256": "a1a19098c2c797d27dbf48f2ec00603d721a4224d04d4fe2ffa070616f11a43d",
+      "size": 1459,
+      "version": 700,
+      "source": "inputs/geometry.jww",
+      "source_sha256": "d4d9d889c1ea088fe588fe9d6772deb75ae331999d97a024fb6911d8dbaf836a"
+    },
+    {
+      "path": "native/unicode_v700.jws",
+      "sha256": "20d238a531ebdabf0d8ab58420c7d3ed10cafa7004755f84cf60ca4f9f802f05",
+      "size": 821,
+      "version": 700,
+      "source": "inputs/unicode.jww",
+      "source_sha256": "64d222ebd30d214f0ef72a368a2ee3e32ea6bba8331f2a0df0b71d741016fac4"
+    },
+    {
+      "path": "native/blocks_v700.jws",
+      "sha256": "abdf1fb42228dd10cab11de54e8bdfc9e594cb33d339ccee9f6899f5d49d7238",
+      "size": 1063,
+      "version": 700,
+      "source": "inputs/blocks.jww",
+      "source_sha256": "29100385c4ad0a4721c2dfe1d8c22d459809c2a7a977313092a2e7b02c92b4db"
+    },
+    {
+      "path": "native/image_v700.jws",
+      "sha256": "23f2d4719bf1fb15cb62317528a65a632af2868adde2d7e8aca5704de47d5056",
+      "size": 778,
+      "version": 700,
+      "source": "inputs/image.jww",
+      "source_sha256": "1c0a444110e7843c103f575149b7ddbdea93289d06c50cf212734050e278f4b6"
+    }
+  ],
+  "placement_checks": [
+    {
+      "source": "native/basic_v600.jws",
+      "target_input": "inputs/basic.jww",
+      "output": "placement/basic_translated.jww",
+      "output_sha256": "6b5dc3b65fa79b3b4b1bc4a9e98ce230c74be46bd2b8a0c83e652610a5ce448a",
+      "method": "Jw_cad Figure command; default scale 1; left-click placement; Save As JWW",
+      "placement_point_from_saved_geometry": [
+        89.69849246231155,
+        -29.547738693467334
+      ],
+      "scope": "Native translation only. Placement point inferred from saved geometry; not an independently typed coordinate."
+    }
+  ]
+}

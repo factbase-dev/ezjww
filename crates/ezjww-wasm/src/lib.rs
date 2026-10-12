@@ -63,6 +63,27 @@ pub fn is_jwc_file(data: &[u8]) -> bool {
     ezjww_core::is_jwc_signature(data)
 }
 
+#[wasm_bindgen(js_name = isJwsFile)]
+pub fn is_jws_file(data: &[u8]) -> bool {
+    ezjww_core::is_jws_signature(data)
+}
+#[wasm_bindgen(js_name = readJwsHeader)]
+pub fn read_jws_header(data: &[u8]) -> Result<JsValue, JsValue> {
+    to_js_value(&ezjww_core::parse_jws_header(data).map_err(|e| js_error(&e.to_string()))?)
+}
+#[wasm_bindgen(js_name = readJwsDocument)]
+pub fn read_jws_document(data: &[u8]) -> Result<JsValue, JsValue> {
+    let doc = ezjww_core::parse_jws_document(data).map_err(|e| js_error(&e.to_string()))?;
+    to_js_value(&ezjww_core::schema::jws_document_to_dto(&doc))
+}
+fn convert_jws(
+    data: &[u8],
+    options: ConvertOptions,
+) -> Result<ezjww_core::JwsDxfConversion, JsValue> {
+    let doc = ezjww_core::parse_jws_document(data).map_err(|e| js_error(&e.to_string()))?;
+    ezjww_core::convert_jws_document(&doc, options).map_err(|e| js_error(&e.to_string()))
+}
+
 #[wasm_bindgen(js_name = detectFileFormat)]
 pub fn detect_file_format(data: &[u8]) -> Result<JsValue, JsValue> {
     to_js_value(&ezjww_core::detect_format(data))
@@ -103,6 +124,9 @@ pub fn read_dxf_document(
         let converted = convert_jwc(data, options, jwc_coordinates.as_deref())?;
         return to_js_value(&ezjww_core::schema::jwc_dxf_document_to_dto(&converted));
     }
+    if is_jws_file(data) {
+        return to_js_value(&convert_jws(data, options)?);
+    }
     let document = parse_document(data).map_err(to_js_error)?;
     let dxf_document = convert_document_with_options(&document, options);
     to_js_value(&dxf_document)
@@ -135,6 +159,9 @@ pub fn read_dxf_string(
     };
     if is_jwc_file(data) {
         return Ok(convert_jwc(data, options, jwc_coordinates.as_deref())?.to_dxf_string(target));
+    }
+    if is_jws_file(data) {
+        return Ok(convert_jws(data, options)?.to_dxf_string(target));
     }
     let document = parse_document(data).map_err(to_js_error)?;
     let dxf_document = convert_document_with_options(&document, options);

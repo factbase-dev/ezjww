@@ -1,0 +1,806 @@
+{
+  "profile_promoted": false,
+  "passed": 27,
+  "failed": [
+    "r080"
+  ],
+  "cases": [
+    {
+      "id": "r000",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 2,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          },
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r000",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 2,
+        "stored_entities": 2,
+        "dxf_entities": 2
+      }
+    },
+    {
+      "id": "r001",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 4,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          },
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          },
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r001",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 4,
+        "stored_entities": 4,
+        "dxf_entities": 4
+      }
+    },
+    {
+      "id": "r002",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r002",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r003",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 100,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r003",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 100,
+        "stored_entities": 100,
+        "dxf_entities": 100
+      }
+    },
+    {
+      "id": "r004",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r004",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r005",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r005",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r006",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r006",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r007",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r007",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r008",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r008",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r009",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r009",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r010",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r010",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r011",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {
+          "line": {
+            "2": 0
+          }
+        }
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r011",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r012",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "ellipse_line_segments": 38
+      }
+    },
+    {
+      "id": "r013",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "ellipse_line_segments": 38
+      }
+    },
+    {
+      "id": "r014",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 4.2,
+            "spacing": 0.5
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r014",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r015",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 1.2
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r015",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r016",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 3,
+            "size_x": 3.0,
+            "size_y": 3.0,
+            "spacing": 0.5
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r016",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r017",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 2,
+            "size_x": 2.5,
+            "size_y": 2.5,
+            "spacing": 0.0
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r017",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r018",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 0,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r018",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 0,
+        "stored_entities": 0,
+        "dxf_entities": 0
+      }
+    },
+    {
+      "id": "r019",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 0,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r019",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 0,
+        "stored_entities": 0,
+        "dxf_entities": 0
+      }
+    },
+    {
+      "id": "r020",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 0,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r020",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 0,
+        "stored_entities": 0,
+        "dxf_entities": 0
+      }
+    },
+    {
+      "id": "r021",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 0,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r021",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 0,
+        "stored_entities": 0,
+        "dxf_entities": 0
+      }
+    },
+    {
+      "id": "r022",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 0,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r022",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 0,
+        "stored_entities": 0,
+        "dxf_entities": 0
+      }
+    },
+    {
+      "id": "r023",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [
+          {
+            "text_type": 4,
+            "size_x": 4.0,
+            "size_y": 4.0,
+            "spacing": 0.5
+          }
+        ],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r023",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 1,
+        "stored_entities": 1,
+        "dxf_entities": 1
+      }
+    },
+    {
+      "id": "r024",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 6,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r024",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 6,
+        "stored_entities": 6,
+        "dxf_entities": 6
+      }
+    },
+    {
+      "id": "r025",
+      "role": "candidate",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 0,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "id": "r025",
+        "role": "candidate",
+        "boundary_check": true,
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "profile_promoted": false,
+        "source_entities": 0,
+        "stored_entities": 0,
+        "dxf_entities": 0
+      }
+    },
+    {
+      "id": "r080",
+      "role": "holdout",
+      "passed": false,
+      "error": "Non-contiguous or invalid string reference at 2483",
+      "profile_promoted": false
+    },
+    {
+      "id": "r081",
+      "role": "holdout",
+      "passed": true,
+      "native_jww": {
+        "entity_count": 1,
+        "metadata_entities_excluded": 6,
+        "geometry_and_attributes": true,
+        "text_attributes": [],
+        "allowed_flag_changes": {}
+      },
+      "header": {
+        "state_and_protection_entries": 272
+      },
+      "geometry": {
+        "known_geometry_check": true,
+        "native_dxf_entities_check": true,
+        "native_dxf_full_validation": false,
+        "ellipse_line_segments": 38
+      }
+    }
+  ],
+  "inspector_sha256": "e2ff9273fc27c75855e671924be0d4245a03bdb1cc1fa12222a7c6ac3e4e6c37"
+}

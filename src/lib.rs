@@ -2,6 +2,7 @@
 #![allow(clippy::useless_conversion)]
 
 mod jwc_bindings;
+mod jws_bindings;
 mod jww_bindings;
 
 use std::collections::{BTreeMap, HashMap};
@@ -57,51 +58,68 @@ fn read_document(py: Python<'_>, path: &str) -> PyResult<PyObject> {
 fn document_to_pyobject(
     py: Python<'_>,
     document: &JwwDocument,
+    diagnostics: &[DecodeDiagnostic],
+) -> PyResult<PyObject> {
+    document_parts_to_pyobject(
+        py,
+        header_to_pydict(py, &document.header)?.unbind().into(),
+        &document.entities,
+        &document.block_defs,
+        &document.images,
+        diagnostics,
+        &validate_block_references(document),
+    )
+}
+fn document_parts_to_pyobject(
+    py: Python<'_>,
+    header: PyObject,
+    entities: &[Entity],
+    block_defs: &[BlockDef],
+    images: &[ezjww_core::EmbeddedImage],
     decode_diagnostics: &[DecodeDiagnostic],
+    validation: &BlockReferenceValidation,
 ) -> PyResult<PyObject> {
     let out = PyDict::new_bound(py);
-    let header = header_to_pydict(py, &document.header)?;
     out.set_item("header", header)?;
 
-    let block_name_map = block_def_name_map(&document.block_defs);
+    let block_name_map = block_def_name_map(block_defs);
 
-    let entities = PyList::empty_bound(py);
-    for entity in &document.entities {
-        entities.append(entity_to_pydict(py, entity, &block_name_map)?)?;
+    let py_entities = PyList::empty_bound(py);
+    for entity in entities {
+        py_entities.append(entity_to_pydict(py, entity, &block_name_map)?)?;
     }
-    out.set_item("entities", entities)?;
+    out.set_item("entities", py_entities)?;
 
     let metadata_settings = PyList::empty_bound(py);
-    for setting in collect_metadata_settings(&document.entities) {
+    for setting in collect_metadata_settings(entities) {
         metadata_settings.append(metadata_setting_to_pydict(py, &setting)?)?;
     }
     out.set_item("metadata_settings", metadata_settings)?;
 
-    let block_defs = PyList::empty_bound(py);
-    for block_def in &document.block_defs {
-        block_defs.append(block_def_to_pydict(py, block_def, &block_name_map)?)?;
+    let py_blocks = PyList::empty_bound(py);
+    for block_def in block_defs {
+        py_blocks.append(block_def_to_pydict(py, block_def, &block_name_map)?)?;
     }
-    out.set_item("block_defs", block_defs)?;
+    out.set_item("block_defs", py_blocks)?;
     out.set_item(
         "block_def_names",
         block_def_names_to_pydict(py, &block_name_map)?,
     )?;
-    let images = PyList::empty_bound(py);
-    for image in &document.images {
+    let py_images = PyList::empty_bound(py);
+    for image in images {
         let item = PyDict::new_bound(py);
         item.set_item("name", &image.name)?;
         item.set_item("data", PyBytes::new_bound(py, &image.data))?;
         item.set_item("compressed", image.is_compressed())?;
-        images.append(item)?;
+        py_images.append(item)?;
     }
-    out.set_item("images", images)?;
+    out.set_item("images", py_images)?;
 
-    let counts = entity_counts_to_pydict(py, entity_counts(&document.entities))?;
+    let counts = entity_counts_to_pydict(py, entity_counts(entities))?;
     out.set_item("entity_counts", counts)?;
-    let validation = validate_block_references(document);
     out.set_item(
         "validation",
-        block_reference_validation_to_pydict(py, &validation)?,
+        block_reference_validation_to_pydict(py, validation)?,
     )?;
 
     let diagnostics = PyList::empty_bound(py);
@@ -145,6 +163,9 @@ fn read_dxf_document(
     if jwc_bindings::is_jwc_file(path)? {
         return jwc_bindings::dxf_document(py, path, options, jwc_coordinates);
     }
+    if jws_bindings::is_jws_file(path)? {
+        return jwc_bindings::to_python(py, &jws_bindings::convert(path, options)?);
+    }
     let document = read_document_from_file(path).map_err(to_py_err)?;
     let dxf_document = convert_document_with_options(&document, options);
     Ok(dxf_document_to_pydict(py, &dxf_document)?.unbind().into())
@@ -165,6 +186,9 @@ fn read_dxf_string(
         return Ok(
             jwc_bindings::convert(path, options, jwc_coordinates)?.to_dxf_string(target_version)
         );
+    }
+    if jws_bindings::is_jws_file(path)? {
+        return Ok(jws_bindings::convert(path, options)?.to_dxf_string(target_version));
     }
     let document = read_document_from_file(path).map_err(to_py_err)?;
     let dxf_document = convert_document_with_options(&document, options);
@@ -188,6 +212,11 @@ fn write_dxf(
     let options = convert_options(explode_inserts, max_block_nesting, text_em_scale)?;
     if jwc_bindings::is_jwc_file(path)? {
         return jwc_bindings::convert(path, options, jwc_coordinates)?
+            .write_to_file(output_path, target_version)
+            .map_err(|e| PyIOError::new_err(e.to_string()));
+    }
+    if jws_bindings::is_jws_file(path)? {
+        return jws_bindings::convert(path, options)?
             .write_to_file(output_path, target_version)
             .map_err(|e| PyIOError::new_err(e.to_string()));
     }
@@ -221,6 +250,9 @@ fn write_dxf_with_report(
             jwc_coordinates,
             target_version,
         );
+    }
+    if jws_bindings::is_jws_file(path)? {
+        return jws_bindings::write_report(py, path, output_path, options, target_version);
     }
     let parsed = read_document_from_file_with_diagnostics(path).map_err(to_py_err)?;
     let document = &parsed.document;
@@ -273,7 +305,7 @@ fn write_dxf_with_report(
     )?;
     out.set_item(
         "normalized_block_names",
-        normalized_block_name_count(document, &dxf_document),
+        normalized_block_name_count(&document.block_defs, &dxf_document),
     )?;
 
     let diagnostics = PyList::empty_bound(py);
@@ -300,6 +332,7 @@ fn parse_dxf_target_version(value: &str) -> PyResult<DxfTargetVersion> {
 
 fn to_py_err(err: JwwError) -> PyErr {
     match err {
+        JwwError::InvalidArchive(reason) => PyValueError::new_err(reason),
         JwwError::Io(io) => PyIOError::new_err(io.to_string()),
         JwwError::InvalidSignature => PyValueError::new_err("invalid JWW signature"),
         JwwError::InvalidSignatureFound(head) => PyValueError::new_err(format!(
@@ -919,12 +952,11 @@ fn normalized_layer_name_count(document: &JwwDocument, dxf_document: &DxfDocumen
         .count()
 }
 
-fn normalized_block_name_count(document: &JwwDocument, dxf_document: &DxfDocument) -> usize {
-    if dxf_document.blocks.len() != document.block_defs.len() {
+fn normalized_block_name_count(block_defs: &[BlockDef], dxf_document: &DxfDocument) -> usize {
+    if dxf_document.blocks.len() != block_defs.len() {
         return 0;
     }
-    document
-        .block_defs
+    block_defs
         .iter()
         .zip(&dxf_document.blocks)
         .filter(|(source, converted)| {
@@ -1040,6 +1072,7 @@ fn block_reference_validation_to_pydict<'py>(
 fn _core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     jwc_bindings::register(m)?;
     jww_bindings::register(m)?;
+    jws_bindings::register(m)?;
     m.add_function(wrap_pyfunction!(hello_from_bin, m)?)?;
     m.add_function(wrap_pyfunction!(is_jww_file, m)?)?;
     m.add_function(wrap_pyfunction!(read_header, m)?)?;

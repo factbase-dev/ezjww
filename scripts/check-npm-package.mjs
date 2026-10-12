@@ -40,6 +40,7 @@ for (const name of ["q032", "q054", "r013", "r011", "r080"]) {
 copyFileSync(join(root, "jww_samples/Test1.jww"), join(workdir, "Test1.jww"));
 copyFileSync(join(root, "jww_samples/writer/empty.jww"), join(workdir, "empty.jww"));
 copyFileSync(join(root, "jww_samples/writer/basic/basic.jww"), join(workdir, "basic.jww"));
+copyFileSync(join(root, "jws_samples/native/unicode_v700.jws"), join(workdir, "symbol.jws"));
 const probe = String.raw`
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -49,6 +50,14 @@ const entry = require.resolve('ezjww');
 assert.equal(entry, path.join(process.cwd(), 'node_modules/ezjww/dist/index.js'));
 assert.ok(fs.existsSync(path.join(process.cwd(), 'node_modules/ezjww/dist/index.d.ts')));
 assert.equal(fs.readFileSync(path.join(process.cwd(), 'node_modules/ezjww/LICENSE'), 'utf8'), fs.readFileSync('expected-license.txt', 'utf8'));
+const symbol = fs.readFileSync('symbol.jws');
+assert.equal(ez.detectFileFormat(symbol), 'jws');
+assert.equal(ez.isJwsFile(symbol), true);
+assert.equal(ez.readCadDocument(symbol).format, 'jws');
+assert.deepEqual(ez.readJwsHeader(symbol), ez.readJwsDocument(symbol).header);
+assert.equal(ez.readJwsDocument(symbol).entities[2].content, '日本語𠮷ｶﾅ ABC');
+assert.equal(ez.readDxfDocument(symbol).jws_conversion_report.coordinate_space, 'paper_millimeters');
+assert.ok(ez.readDxfString(symbol).includes('AC1015'));
 const input = fs.readFileSync('q032.jwc');
 assert.equal(ez.detectFileFormat(input), 'jwc');
 const cad = ez.readCadDocument(input);
@@ -193,8 +202,8 @@ const report = {
   ...result, version: metadata.version, files, workdir, archive, archive_sha256: sha(archive),
   writer_fixture_sha256: sha(join(workdir, "native-qualified.jww")),
   jwc_dxf_sha256: sha(join(workdir, "q032.dxf")),
-  checked: ["JWW", "empty version-700 JWW", "new JWW generation and readback", "exact native-qualified mixed geometry bytes", "strict writer validation", "Japanese JWC", "both coordinate spaces", "ellipse", "DXF AC1024", "width factors", "unverified line flags and diagnostics", "structural rejection", "bundled WASM and LICENSE", "compiled consumer of installed declarations"],
+  checked: ["Unicode JWS source/header/DXF APIs", "JWW", "empty version-700 JWW", "new JWW generation and readback", "exact native-qualified mixed geometry bytes", "strict writer validation", "Japanese JWC", "both coordinate spaces", "ellipse", "DXF AC1024", "width factors", "unverified line flags and diagnostics", "structural rejection", "bundled WASM and LICENSE", "compiled consumer of installed declarations"],
 };
 mkdirSync(dirname(resolve(values.report)), { recursive: true });
 writeFileSync(values.report, JSON.stringify(report, null, 2) + "\n");
-console.log("Installed npm package JWW/JWC smoke passed.");
+console.log("Installed npm package JWW/JWC/JWS smoke passed.");

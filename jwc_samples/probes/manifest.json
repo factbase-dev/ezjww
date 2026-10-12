@@ -1,0 +1,42 @@
+{
+  "scope": "Synthetic single-field diagnostic mutation of an original native fixture; not a native-generated input",
+  "source": "generated/q030.jwc",
+  "source_sha256": "f20cc277fac06cb6ba13ebfe393f1b77b13280cc922f70192aa82ab3388e8693",
+  "output": "p000.jwc",
+  "sha256": "0eef56476b293c7b3e3e3b854dce287c8ba75a2cacfb59286479015660e89ffb",
+  "patch": {
+    "offset": 2437,
+    "type": "u32 little endian",
+    "before": 1073741824,
+    "after": 0
+  },
+  "purpose": "Measure the effect of clearing text string-reference bit 30",
+  "license": "MIT; repository LICENSE",
+  "native_run": {
+    "input": "p000.jwc",
+    "source": {
+      "size": 4753,
+      "sha256": "0eef56476b293c7b3e3e3b854dce287c8ba75a2cacfb59286479015660e89ffb"
+    },
+    "status": "native_reopen_export",
+    "exit_codes": [
+      0
+    ],
+    "outputs": {
+      "p000ref.jww": {
+        "size": 17564,
+        "sha256": "371c50ab09edf0d607e04b0610c222e601ccb5683fd0f3c562866385f704bd0f"
+      },
+      "p000ref.dxf": {
+        "size": 8858,
+        "sha256": "cee2a5323dc3aeb2998b6e7b96fa8ca8dcffa578c5b3e21687b4cb503c6707b7"
+      },
+      "p000ref.jwc": {
+        "size": 4753,
+        "sha256": "15a13749d5f78df85b28709654afa6a6a6c7a1f8e0f2e342d6618acb2041344f"
+      }
+    }
+  },
+  "observation": "Clearing bit 30 in the single ABC text reference preserves the native JWW drawing entity fields; broader meaning and DOS behavior remain unverified.",
+  "native_text_equal": true
+}

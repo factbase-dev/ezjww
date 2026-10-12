@@ -6,6 +6,12 @@ pub mod format;
 pub mod header;
 mod header_layout;
 pub mod jwc;
+pub mod jws;
+pub use jws::{
+    convert_jws_document, is_jws_signature, parse_jws_document, parse_jws_header,
+    read_jws_document_from_file, read_jws_header_from_file, JwsDocument, JwsDxfConversion,
+    JwsError, JwsHeader,
+};
 pub mod model;
 pub mod parser;
 pub mod reader;

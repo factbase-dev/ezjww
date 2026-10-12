@@ -67,7 +67,7 @@ app.innerHTML = `
       <button id="create-button" class="tool-button" type="button">JWW作成例</button>
       <button id="download-jww-button" class="tool-button" type="button" disabled>生成JWW保存</button>
       <label class="file-button">
-        <input id="file-input" type="file" accept=".jww,.jwc,application/octet-stream" />
+        <input id="file-input" type="file" accept=".jww,.jwc,.jws,application/octet-stream" />
         ファイル選択
       </label>
     </div>
@@ -76,7 +76,7 @@ app.innerHTML = `
   <main class="shell">
     <section class="left-pane">
       <div id="dropzone" class="dropzone" tabindex="0">
-        <div class="drop-title">JWW/JWCファイルをドロップ</div>
+        <div class="drop-title">JWW/JWC/JWSファイルをドロップ</div>
         <div id="status-line" class="drop-status">未読込</div>
       </div>
 
@@ -273,7 +273,7 @@ async function parseBytes(input: CurrentInput): Promise<void> {
     await ensureWasm();
     const started = performance.now();
     if (!detectFileFormat(input.bytes)) {
-      throw new Error("JWW/JWCシグネチャを確認できません");
+      throw new Error("JWW/JWC/JWSシグネチャを確認できません");
     }
 
     const cad = readCadDocument(input.bytes) as CadDocument;
@@ -312,7 +312,7 @@ function render(): void {
   renderLayers(parsedState?.cad ?? null);
   downloadButton.disabled = !parsedState;
   downloadJwwButton.disabled = !parsedState?.generatedJww;
-  coordinateSelect.disabled = parsedState?.cad.format === "jww";
+  coordinateSelect.disabled = parsedState?.cad.format !== "jwc";
   renderPreview(parsedState);
   renderDetail(parsedState);
 }
@@ -330,7 +330,7 @@ function renderMetrics(state: ParsedState | null): void {
   }
 
   target.innerHTML = metricMarkup([
-    ["Format / Version", state.cad.format === "jww" ? `JWW ${state.cad.document.header.version}` : `JWC ${state.cad.document.header.source_version ?? "版不明"}`],
+    ["Format / Version", state.cad.format !== "jwc" ? `${state.cad.format.toUpperCase()} ${state.cad.document.header.version}` : `JWC ${state.cad.document.header.source_version ?? "版不明"}`],
     ["Entities", formatNumber(state.cad.document.entities.length)],
     ["DXF", formatNumber(state.dxf.entities.length)],
     ["Parse", `${state.elapsedMs.toFixed(1)} ms`],
@@ -356,7 +356,7 @@ function renderCounts(state: ParsedState | null): void {
     )
     .join("");
 
-  const validation = state.cad.format === "jww" ? state.cad.document.validation : null;
+  const validation = state.cad.format !== "jwc" ? state.cad.document.validation : null;
   target.innerHTML = `
     ${panelTitle("Entity Counts")}
     <table class="data-table">
@@ -375,6 +375,13 @@ function renderLayers(cad: CadDocument | null): void {
   const target = document.querySelector<HTMLDivElement>("#layers")!;
   if (!cad) {
     target.innerHTML = panelTitle("Layer Groups") + emptyLine();
+    return;
+  }
+  if (cad.format === "jws") {
+    const groups = cad.document.header.group_scales.map((scale, index) =>
+      `<li><span>${index.toString(16).toUpperCase()}</span><strong>1:${scale}</strong><em>設定なし</em></li>`,
+    ).join("");
+    target.innerHTML = `${panelTitle("Layer Group Scales")}<p>JWSは保存座標で表示します。色・線種には既定値を使います。</p><ul class="layer-list">${groups}</ul>`;
     return;
   }
   const groups = cad.document.header.layer_groups.map((group, index) => {
@@ -430,7 +437,7 @@ function renderDetail(state: ParsedState | null): void {
     return;
   }
 
-  const unresolved = state.cad.format === "jww" && state.cad.document.validation.has_unresolved;
+  const unresolved = state.cad.format !== "jwc" && state.cad.document.validation.has_unresolved;
   target.innerHTML = `
     <div class="summary-grid">
       <div>
@@ -443,7 +450,7 @@ function renderDetail(state: ParsedState | null): void {
       </div>
       <div>
         <span>Blocks</span>
-        <strong>${formatNumber(state.cad.format === "jww" ? state.cad.document.block_defs.length : 0)}</strong>
+        <strong>${formatNumber(state.cad.format !== "jwc" ? state.cad.document.block_defs.length : 0)}</strong>
       </div>
       <div>
         <span>DXF text</span>

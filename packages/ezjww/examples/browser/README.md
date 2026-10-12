@@ -16,7 +16,7 @@ pnpm run example:browser:dev
 ```
 
 Open the URL printed by Vite. Load the bundled JWW sample, or choose or drop your
-own `.jww` or `.jwc` file. For JWC, choose paper or model millimeters and review
+own `.jww`, `.jwc` or `.jws` file. For JWC, choose paper or model millimeters and review
 the conversion notices before downloading the DXF.
 
 Choose **JWW作成例** to generate a version-700 drawing with a line, circle,
@@ -50,3 +50,7 @@ content. The source JWC version is unknown.
 
 See the [API reference](../../../../docs/JWC_API.md) for coordinate options,
 source records, and diagnostics.
+
+JWS symbols use stored paper coordinates. Their origin and group scales are
+retained as metadata, and default colors/line types are used. See the
+[JWS guide](../../../../docs/JWS_FORMAT.md) for supported versions and limits.

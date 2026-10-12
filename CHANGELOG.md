@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Read JWS registered symbols (versions 351, 420, 600, 700) through Rust,
+  Python and TypeScript/WASM. Add dedicated header/document APIs and integrate
+  signature detection, `readfile`, analysis, preview, DXF and CLI commands.
+  Source coordinates, insertion origin and group scales are preserved;
+  conversion reports make default drawing settings explicit.
+- Add original native JWS fixtures, strict truncation/error checks and
+  Python/WASM parity coverage. Image references are retained without claiming
+  embedded JWS bitmap support. See [JWS support](docs/JWS_FORMAT.md).
+
 ## 0.6.0 — unreleased
 
 ### Added

@@ -1,0 +1,276 @@
+{
+  "status": "research_only",
+  "previous_probe": "external_probe_summary.json",
+  "note": "All five boundaries now agree. Native read/export succeeds; strict semantic comparison succeeds only for A_001. Counts, flags, ordering and normalization differences in the other four remain unresolved. Third-party source and derived drawings are outside this repository.",
+  "files": [
+    {
+      "file": "hdr_tile_20101108.jwc",
+      "source": {
+        "size": 72675,
+        "sha256": "4cd7b214a2e30d5d366a56587ed6b617d791f976db76c37b7d95b47a7901d2bf"
+      },
+      "csv_fields": 31,
+      "counts": [
+        1479,
+        797,
+        209,
+        61,
+        0
+      ],
+      "string_pool_size": 4160,
+      "boundary_check": true,
+      "strict_native_jww_comparison": {
+        "passed": false,
+        "error": "Native JWW count: 2545 != 2546"
+      },
+      "native_saved_counts": [
+        1478,
+        797,
+        209,
+        61,
+        0
+      ],
+      "native_run": {
+        "input": "x000.jwc",
+        "source": {
+          "size": 72675,
+          "sha256": "4cd7b214a2e30d5d366a56587ed6b617d791f976db76c37b7d95b47a7901d2bf"
+        },
+        "status": "native_reopen_export",
+        "exit_codes": [
+          0
+        ],
+        "outputs": {
+          "x000ref.jww": {
+            "size": 180001,
+            "sha256": "a13b1fae4b42804a45568368cb68217e73f251cb6da2b78301a93ff196b5311a"
+          },
+          "x000ref.dxf": {
+            "size": 435450,
+            "sha256": "a573c671716131c5ec70db2d462865193bb90c802a60cec9b52590ec8dd09900"
+          },
+          "x000ref.jwc": {
+            "size": 72653,
+            "sha256": "4d539de6b01a1e5e2eb789901e0d4307ef306d9fd32465df74535746f8fcf6f2"
+          }
+        }
+      },
+      "profile_promoted": false
+    },
+    {
+      "file": "rw_tile1_20101108.jwc",
+      "source": {
+        "size": 72737,
+        "sha256": "41f23c101baea2e490053c71f57818dece15d9b8ed7403cd45045c4538c7184f"
+      },
+      "csv_fields": 31,
+      "counts": [
+        1471,
+        797,
+        213,
+        61,
+        0
+      ],
+      "string_pool_size": 4302,
+      "boundary_check": true,
+      "strict_native_jww_comparison": {
+        "passed": false,
+        "error": "Native JWW count: 2541 != 2542"
+      },
+      "native_saved_counts": [
+        1470,
+        797,
+        213,
+        61,
+        0
+      ],
+      "native_run": {
+        "input": "x001.jwc",
+        "source": {
+          "size": 72737,
+          "sha256": "41f23c101baea2e490053c71f57818dece15d9b8ed7403cd45045c4538c7184f"
+        },
+        "status": "native_reopen_export",
+        "exit_codes": [
+          0
+        ],
+        "outputs": {
+          "x001ref.jww": {
+            "size": 180181,
+            "sha256": "bfd4bd8e2950855b02f8f218d044bd8f0ec7fc2fb020c0fda322c07e81a03559"
+          },
+          "x001ref.dxf": {
+            "size": 434864,
+            "sha256": "056f35e5c188c6de8eea4a219ebc617165a8b889aaae8535a9dd4a006ee807e7"
+          },
+          "x001ref.jwc": {
+            "size": 72715,
+            "sha256": "2f1962764c9c12181542d6eafacdf5237abff0271c419aeaac146ce2c20a0c7f"
+          }
+        }
+      },
+      "profile_promoted": false
+    },
+    {
+      "file": "rw_tile2_2018.jwc",
+      "source": {
+        "size": 209218,
+        "sha256": "3c9c2d46ad626437313d127759cd1cccb674e857b122263f3d60a5202e2938e0"
+      },
+      "csv_fields": 32,
+      "counts": [
+        7075,
+        1222,
+        263,
+        0,
+        0
+      ],
+      "string_pool_size": 3427,
+      "boundary_check": true,
+      "strict_native_jww_comparison": {
+        "passed": false,
+        "error": "line: native JWW flags mismatch"
+      },
+      "native_saved_counts": [
+        7075,
+        1222,
+        263,
+        0,
+        0
+      ],
+      "native_run": {
+        "input": "x002.jwc",
+        "source": {
+          "size": 209218,
+          "sha256": "3c9c2d46ad626437313d127759cd1cccb674e857b122263f3d60a5202e2938e0"
+        },
+        "status": "native_reopen_export",
+        "exit_codes": [
+          0
+        ],
+        "outputs": {
+          "x002ref.jww": {
+            "size": 490136,
+            "sha256": "8eb13e51b7f5b02966a9d3e9e00fdb71fb2153c9133b2718f96954c0183807e3"
+          },
+          "x002ref.dxf": {
+            "size": 1463773,
+            "sha256": "592dcfc5a6912a35011f71eb94a99d8614d8d93dc4b751aa8aac94b14322e7d9"
+          },
+          "x002ref.jwc": {
+            "size": 209218,
+            "sha256": "3aeda736d1fc0b7614733d75116e272a902dfc90c5d81dd8f35e57da9ca9b52f"
+          }
+        }
+      },
+      "profile_promoted": false
+    },
+    {
+      "file": "yane_yuka_20101108.jwc",
+      "source": {
+        "size": 95284,
+        "sha256": "a6be30eb6808ad76fc4164145e1eedc0c2eb771dd0da323efd6b5e2b4b5ecbde"
+      },
+      "csv_fields": 31,
+      "counts": [
+        2703,
+        697,
+        238,
+        0,
+        0
+      ],
+      "string_pool_size": 3077,
+      "boundary_check": true,
+      "strict_native_jww_comparison": {
+        "passed": false,
+        "error": "arc.center_x: -9.466671328747168 != -17.000005537938932 (tolerance 1e-07)"
+      },
+      "native_saved_counts": [
+        2703,
+        697,
+        238,
+        0,
+        0
+      ],
+      "native_run": {
+        "input": "x003.jwc",
+        "source": {
+          "size": 95284,
+          "sha256": "a6be30eb6808ad76fc4164145e1eedc0c2eb771dd0da323efd6b5e2b4b5ecbde"
+        },
+        "status": "native_reopen_export",
+        "exit_codes": [
+          0
+        ],
+        "outputs": {
+          "x003ref.jww": {
+            "size": 232166,
+            "sha256": "b94c1ed6928f2d2710ba8beac75ca7e337e6ec0262843ef5a7b83e44c248bc8a"
+          },
+          "x003ref.dxf": {
+            "size": 564416,
+            "sha256": "24672c3a4a303ac18858ada22246b2a9c4b488b2e0ecdb5df371ad2e3a1128e4"
+          },
+          "x003ref.jwc": {
+            "size": 95284,
+            "sha256": "98b36f877f761ed8c938b5af44ad76b4f5f004c8573de66c25dc02ea99fbb157"
+          }
+        }
+      },
+      "profile_promoted": false
+    },
+    {
+      "file": "A_001.jwc",
+      "source": {
+        "size": 20059,
+        "sha256": "ecfa531047166111aae374051152cece5c7f7c1af0d07315c9160987065974dd"
+      },
+      "csv_fields": 32,
+      "counts": [
+        697,
+        0,
+        0,
+        0,
+        0
+      ],
+      "string_pool_size": 0,
+      "boundary_check": true,
+      "strict_native_jww_comparison": {
+        "passed": true
+      },
+      "native_saved_counts": [
+        697,
+        0,
+        0,
+        0,
+        0
+      ],
+      "native_run": {
+        "input": "x004.jwc",
+        "source": {
+          "size": 20059,
+          "sha256": "ecfa531047166111aae374051152cece5c7f7c1af0d07315c9160987065974dd"
+        },
+        "status": "native_reopen_export",
+        "exit_codes": [
+          0
+        ],
+        "outputs": {
+          "x004ref.jww": {
+            "size": 51600,
+            "sha256": "4d5be46a29e2568655cfacbae0adc4b98ebd4fcb97398e7bda47239e7a4fd35b"
+          },
+          "x004ref.dxf": {
+            "size": 114340,
+            "sha256": "0ee5d3356c64cdfb089b93bbdf910ed51fc17939b612c7073d533521c746259d"
+          },
+          "x004ref.jwc": {
+            "size": 20059,
+            "sha256": "530e56e70c386dc2b932eb853bc7c89f2d66cb8ada9a8af64c4c4e8ebe2ffde1"
+          }
+        }
+      },
+      "profile_promoted": false
+    }
+  ]
+}

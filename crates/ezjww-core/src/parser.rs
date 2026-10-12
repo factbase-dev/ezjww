@@ -113,6 +113,57 @@ pub fn read_document_from_file_with_diagnostics(
     parse_document_with_diagnostics(&data)
 }
 
+/// Header-independent MFC body, shared with the JWS reader. JWW's historical
+/// recovery behavior above is intentionally unchanged.
+pub(crate) struct ArchiveBody {
+    pub entities: Vec<Entity>,
+    pub block_defs: Vec<BlockDef>,
+    pub images: Vec<EmbeddedImage>,
+    pub diagnostics: Vec<DecodeDiagnostic>,
+}
+
+pub(crate) fn parse_symbol_body(
+    data: &[u8],
+    offset: usize,
+    version: u32,
+) -> Result<ArchiveBody, (usize, JwwError)> {
+    let mut reader = Reader::with_base_offset(&data[offset..], offset);
+    let mut table = ArchiveTable::new();
+    table.strict = true;
+    reader.require_finite_numbers();
+    let result = (|| {
+        let outcome = parse_entity_list_lenient(&mut reader, version, &mut table);
+        if let Some(truncation) = outcome.truncation {
+            return Err(truncation.error);
+        }
+        let count = read_count(&mut reader)?;
+        if count > reader.remaining() / 2 {
+            return Err(JwwError::UnexpectedEof("block list"));
+        }
+        let mut block_defs = Vec::new();
+        for _ in 0..count {
+            if let Some(block) = parse_block_def_with_tracking(&mut reader, version, &mut table)? {
+                block_defs.push(block);
+            }
+        }
+        // All qualified native JWS files end after the block list, including
+        // symbols containing image references. Do not guess a JWW image trailer.
+        let images = Vec::new();
+        if reader.remaining() != 0 {
+            return Err(JwwError::InvalidArchive("unconsumed trailing data"));
+        }
+        Ok((outcome.entities, block_defs, images))
+    })();
+    let (entities, block_defs, images) =
+        result.map_err(|error| (offset + reader.bytes_read(), error))?;
+    Ok(ArchiveBody {
+        entities,
+        block_defs,
+        images,
+        diagnostics: reader.into_decode_diagnostics(),
+    })
+}
+
 fn find_entity_list_offset(data: &[u8], version: u32) -> Option<usize> {
     let expected_schema = version as u16;
     let mut fallback_offset = None;
@@ -244,6 +295,7 @@ struct EntityListTruncation {
 struct ArchiveTable {
     class_names: HashMap<u32, String>,
     next_pid: u32,
+    strict: bool,
 }
 
 impl ArchiveTable {
@@ -251,6 +303,7 @@ impl ArchiveTable {
         Self {
             class_names: HashMap::new(),
             next_pid: 1,
+            strict: false,
         }
     }
 
@@ -293,6 +346,15 @@ fn parse_entity_list_lenient(
         }
     };
     // A corrupt count must not drive a huge allocation up front.
+    if table.strict && count > reader.remaining() / 2 {
+        return EntityListOutcome {
+            entities: Vec::new(),
+            truncation: Some(EntityListTruncation {
+                expected_entities: count,
+                error: JwwError::UnexpectedEof("entity list"),
+            }),
+        };
+    }
     let mut entities = Vec::with_capacity(count.min(1 << 16));
 
     for _ in 0..count {
@@ -317,6 +379,12 @@ fn parse_entity_list_lenient(
     }
 }
 
+// Jw_cad 10.02.1's old-format JWS save sets header 600 while retaining
+// MFC runtime class schema 700. This pair is covered by a native fixture.
+fn symbol_schema_matches(version: u32, schema: u16) -> bool {
+    u32::from(schema) == version || (version == 600 && schema == 700)
+}
+
 fn parse_entity_with_pid_tracking(
     reader: &mut Reader<'_>,
     version: u32,
@@ -324,7 +392,12 @@ fn parse_entity_with_pid_tracking(
 ) -> Result<Option<Entity>, JwwError> {
     let class_name = match read_object_tag(reader)? {
         ObjectTag::NewClass => {
-            let _schema_version = reader.read_u16()?;
+            let schema_version = reader.read_u16()?;
+            if table.strict && !symbol_schema_matches(version, schema_version) {
+                return Err(JwwError::InvalidArchive(
+                    "entity schema differs from file version",
+                ));
+            }
             let name_len = reader.read_u16()? as usize;
             let name = String::from_utf8_lossy(&reader.read_bytes(name_len)?).to_string();
             table.register_class(name.clone());
@@ -640,16 +713,28 @@ fn parse_block_def_with_tracking(
 ) -> Result<Option<BlockDef>, JwwError> {
     match read_object_tag(reader)? {
         ObjectTag::NewClass => {
-            let _schema = reader.read_u16()?;
+            let schema = reader.read_u16()?;
+            if table.strict && !symbol_schema_matches(version, schema) {
+                return Err(JwwError::InvalidArchive(
+                    "block schema differs from file version",
+                ));
+            }
             let name_len = reader.read_u16()? as usize;
             let class_name = String::from_utf8_lossy(&reader.read_bytes(name_len)?).to_string();
+            if table.strict && class_name != "CDataList" {
+                return Err(JwwError::UnknownEntityClass(class_name));
+            }
             table.register_class(class_name);
         }
         ObjectTag::Null => return Ok(None),
         // The wrapper class name (e.g. "CDataList") is never actually needed
         // to know which fields follow, so a reference to it is accepted
         // without a strict lookup, same as before this table was unified.
-        ObjectTag::ClassRef(_) => {}
+        ObjectTag::ClassRef(pid) => {
+            if table.strict && table.resolve_class(pid) != Some("CDataList") {
+                return Err(JwwError::UnknownClassPid(pid));
+            }
+        }
         ObjectTag::ObjectRef(tag) => return Err(JwwError::UnsupportedObjectReference(tag)),
     }
 
@@ -668,7 +753,13 @@ fn parse_block_def_with_tracking(
 
     // Keep whatever part of a damaged nested list could be read; the outer block
     // definition loop stops at the next tag mismatch anyway.
-    let entities = parse_entity_list_lenient(reader, version, table).entities;
+    let outcome = parse_entity_list_lenient(reader, version, table);
+    if table.strict {
+        if let Some(truncation) = outcome.truncation {
+            return Err(truncation.error);
+        }
+    }
+    let entities = outcome.entities;
 
     Ok(Some(BlockDef {
         base,
@@ -716,14 +807,21 @@ impl BlockReferenceValidation {
 }
 
 pub fn validate_block_references(document: &JwwDocument) -> BlockReferenceValidation {
+    validate_entity_block_references(&document.entities, &document.block_defs)
+}
+
+pub(crate) fn validate_entity_block_references(
+    entities: &[Entity],
+    block_defs: &[BlockDef],
+) -> BlockReferenceValidation {
     let mut ref_numbers = Vec::<u32>::new();
-    collect_block_ref_numbers(&document.entities, &mut ref_numbers);
-    for block_def in &document.block_defs {
+    collect_block_ref_numbers(entities, &mut ref_numbers);
+    for block_def in block_defs {
         collect_block_ref_numbers(&block_def.entities, &mut ref_numbers);
     }
 
     let total_references = ref_numbers.len();
-    let name_map = block_def_name_map(&document.block_defs);
+    let name_map = block_def_name_map(block_defs);
 
     let mut resolved_references = 0usize;
     let mut unresolved = BTreeSet::<u32>::new();

@@ -1,0 +1,1380 @@
+{
+  "profile_promoted": false,
+  "tested_role": "all",
+  "cases": [
+    {
+      "id": "q000",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 0,
+      "stored_entities": 0,
+      "dxf_entities": 0,
+      "geometry": []
+    },
+    {
+      "id": "q001",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q002",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.3550276207752177e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q003",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            4.654225222111563e-06,
+            1.2961133393218915e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q004",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            1.8204501259333483e-05,
+            6.6278523718210636e-06,
+            5.066624908067752e-06,
+            1.178284890102077e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q005",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            0.003861003860947676,
+            0.0018249276035930961,
+            0.004992157337255776,
+            0.001199022684886586
+          ],
+          "coordinate_error_bounds": [
+            0.006342001482625483,
+            0.003171001241312741,
+            0.006342001482625483,
+            0.003171001241312741
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q010",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            1.3962675723178108e-05,
+            6.510023922601249e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q011",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            1.3962675723178108e-05,
+            6.510023922601249e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q012",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            1.3962675723178108e-05,
+            6.510023922601249e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q013",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            1.3962675723178108e-05,
+            6.510023922601249e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q014",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            1.3962675723178108e-05,
+            6.510023922601249e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q020",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "point",
+          "coordinate_errors": [
+            9.308450444223126e-06,
+            8.954964982876845e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q021",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "temporary_point",
+          "coordinate_errors": [
+            9.308450444223126e-06,
+            8.954964982876845e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q022",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 2,
+      "stored_entities": 2,
+      "dxf_entities": 2,
+      "geometry": [
+        {
+          "type": "temporary_point",
+          "coordinate_errors": [
+            9.308450444223126e-06,
+            8.954964982876845e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        },
+        {
+          "type": "temporary_point",
+          "coordinate_errors": [
+            2.3271126167401235e-05,
+            2.798426578465296e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q023",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "point",
+          "coordinate_errors": [
+            9.308450444223126e-06,
+            8.954964982876845e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q030",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q031",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q032",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q033",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q034",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q035",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 0,
+      "dxf_entities": 0,
+      "geometry": []
+    },
+    {
+      "id": "q036",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q037",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q038",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q039",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q040",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q041",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q042",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q044",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q045",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q046",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q047",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q050",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q051",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q052",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q053",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q054",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q055",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            1.6142502715865703e-05,
+            7.305366182208672e-06,
+            2.592226735487202e-06,
+            7.305366182208672e-06
+          ],
+          "coordinate_error_bounds": [
+            1.7498530314913125e-05,
+            8.749765157456564e-06,
+            1.7498530314913125e-05,
+            8.749765157456564e-06
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q056",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            2.0030842847518215e-05,
+            1.2902219282295846e-05,
+            1.0192164154432248e-05,
+            1.2902219282295846e-05
+          ],
+          "coordinate_error_bounds": [
+            3.502551775156854e-05,
+            1.7513258875784267e-05,
+            3.502551775156854e-05,
+            1.7513258875784267e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q057",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q058",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q059",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q060",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q061",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q063",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 0,
+      "stored_entities": 0,
+      "dxf_entities": 0,
+      "geometry": []
+    },
+    {
+      "id": "q064",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 0,
+      "stored_entities": 0,
+      "dxf_entities": 0,
+      "geometry": []
+    },
+    {
+      "id": "q070",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 4,
+      "stored_entities": 4,
+      "dxf_entities": 4,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06,
+            1.6495988006681728e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        },
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            1.3962675723178108e-05,
+            6.510023922601249e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        },
+        {
+          "type": "text",
+          "coordinate_errors": [
+            4.654225222111563e-06,
+            4.300739760765282e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        },
+        {
+          "type": "point",
+          "coordinate_errors": [
+            9.308450444223126e-06,
+            8.954964982876845e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q080",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "line",
+          "coordinate_errors": [
+            1.0044878536064061e-05,
+            6.892966496252484e-06,
+            1.826341542709997e-05,
+            6.244909798169829e-06
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05,
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q081",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "arc",
+          "coordinate_errors": [
+            8.630936690678936e-06,
+            1.1429363269144233e-05
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q082",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "text",
+          "coordinate_errors": [
+            7.128623451535532e-06,
+            9.927050030000828e-06
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q083",
+      "role": "candidate",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "point",
+          "coordinate_errors": [
+            5.685224493845453e-06,
+            1.2047962798078515e-05
+          ],
+          "coordinate_error_bounds": [
+            1.2387719692627896e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q084",
+      "role": "holdout",
+      "boundary_check": true,
+      "known_geometry_check": true,
+      "native_dxf_entities_check": true,
+      "native_dxf_full_validation": false,
+      "profile_promoted": false,
+      "source_entities": 1,
+      "stored_entities": 1,
+      "dxf_entities": 1,
+      "geometry": [
+        {
+          "type": "point",
+          "coordinate_errors": [
+            2.1739355815952877e-05,
+            7.776680149618187e-06
+          ],
+          "coordinate_error_bounds": [
+            2.477443938525579e-05,
+            1.2387719692627896e-05
+          ]
+        }
+      ]
+    }
+  ],
+  "damaged_input_checks": 13,
+  "inspector_sha256": "e2ff9273fc27c75855e671924be0d4245a03bdb1cc1fa12222a7c6ac3e4e6c37"
+}

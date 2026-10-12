@@ -70,6 +70,7 @@ pub(crate) fn detect_file_format(path: &str) -> PyResult<Option<&'static str>> {
         .map(|format| match format {
             CadFormat::Jww => "jww",
             CadFormat::Jwc => "jwc",
+            CadFormat::Jws => "jws",
         }))
 }
 
@@ -98,6 +99,8 @@ fn read_cad_document(py: Python<'_>, path: &str) -> PyResult<PyObject> {
         .ok_or_else(|| PyValueError::new_err("unrecognized CAD format"))?;
     let document = if format == "jwc" {
         read_jwc_document(py, path)?
+    } else if format == "jws" {
+        super::jws_bindings::read_jws_document(py, path)?
     } else {
         super::read_document(py, path)?
     };

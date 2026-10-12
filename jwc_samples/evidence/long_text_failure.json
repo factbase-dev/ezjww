@@ -1,0 +1,12 @@
+{
+  "case": "r080",
+  "source_cp932_length": 281,
+  "native_reopened_cp932_length": 256,
+  "string_pool_offset": 2491,
+  "first_terminator_relative": 256,
+  "second_reference_relative": 282,
+  "unexplained_gap_bytes": 25,
+  "source_jwc_sha256": "a40da09ad7eee35227f4dfebc6f58780ac456109954b6d75decb9912e75e7172",
+  "observation": "The native writer truncates this 281-byte text to 256 bytes but the second pointer retains 282. The intervening 25 bytes are unexplained; the strict contiguous-pool hypothesis correctly refuses this case.",
+  "followup": "Do not relax the parser into scanning/replacing text. Establish gap/length semantics or reject this layout explicitly."
+}
