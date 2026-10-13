@@ -20,6 +20,7 @@ pub fn to_write_document(source: Value, skip_unsupported: bool) -> Result<Value,
         "palette",
         "line_types",
         "text_presets",
+        "pens",
     ] {
         if let Some(value) = header.get(field).filter(|v| !v.is_null()) {
             target["options"][field] = value.clone();

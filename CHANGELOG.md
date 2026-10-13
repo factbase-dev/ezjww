@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Read the pen widths of a JWW header (`header.pens` / `JwwPens`): the screen
+  width in dots and the printer color, width and point radius of pen colors
+  0..=9 and of the extended colors 100..=356, with the unit the widths are in
+  (`max_draw_width` < 0 means "線幅を1/100mm単位とする", otherwise printer dots
+  with the recorded `printer_dpi`). `JwwPens::printer_width_mm` converts a pen
+  color's width to millimetres. Jw_cad prints an entity with `pen_width` 0 at
+  its pen color's width, so this is the line width of most drawings.
+- Write the pen widths: `options.pens` (`JwwWriteOptions::pens`, supplied by
+  `new_jww_document()` from the template and kept by `to_write_document`)
+  patches the screen widths, the printer pens, the unit flag and the dpi flag
+  of the written header. Without it the template's Jw_cad defaults remain:
+  dots at 300 dpi, which also makes an entity `pen_width` a count of dots.
 - Read JWS registered symbols (versions 351, 420, 600, 700) through Rust,
   Python and TypeScript/WASM. Add dedicated header/document APIs and integrate
   signature detection, `readfile`, analysis, preview, DXF and CLI commands.

@@ -21,7 +21,8 @@ pub use ezjww_core::{
     DxfCircle, DxfDocument, DxfDocumentDto, DxfEllipse, DxfEntity, DxfFilledPolygon, DxfInsert,
     DxfLayer, DxfLine, DxfPoint, DxfSolid, DxfTargetVersion, DxfText, DxfVertex, Entity,
     EntityBase, JwwDocument, JwwDocumentDto, JwwError, JwwHeader, JwwLineTypes, JwwPalette,
-    LayerGroupHeader, LayerHeader, Line, LineTypePattern, MetadataSetting, Point, Solid, Text,
+    JwwPens, LayerGroupHeader, LayerHeader, Line, LineTypePattern, MetadataSetting, Point,
+    PrinterPen, Solid, Text,
 };
 use pyo3::exceptions::{PyIOError, PyValueError};
 use pyo3::prelude::*;
@@ -356,6 +357,39 @@ fn to_py_err(err: JwwError) -> PyErr {
     }
 }
 
+fn printer_pen_to_pydict<'py>(py: Python<'py>, pen: &PrinterPen) -> PyResult<Bound<'py, PyDict>> {
+    let out = PyDict::new_bound(py);
+    out.set_item("color", pen.color)?;
+    out.set_item("width", pen.width)?;
+    out.set_item("point_radius", pen.point_radius)?;
+    Ok(out)
+}
+
+/// `header["pens"]`: the pen widths of the file (screen dots, printer pens per pen
+/// color with the unit they are in, and the dpi the dot widths refer to).
+fn pens_to_pydict<'py>(py: Python<'py>, pens: &JwwPens) -> PyResult<Bound<'py, PyDict>> {
+    let out = PyDict::new_bound(py);
+    out.set_item("screen_widths", pens.screen_widths.to_vec())?;
+    let printer = PyList::empty_bound(py);
+    for pen in &pens.printer {
+        printer.append(printer_pen_to_pydict(py, pen)?)?;
+    }
+    out.set_item("printer", printer)?;
+    if let Some(extended) = &pens.extended_printer {
+        let list = PyList::empty_bound(py);
+        for pen in extended.iter() {
+            list.append(printer_pen_to_pydict(py, pen)?)?;
+        }
+        out.set_item("extended_printer", list)?;
+    } else {
+        out.set_item("extended_printer", py.None())?;
+    }
+    out.set_item("max_draw_width", pens.max_draw_width)?;
+    out.set_item("width_unit", pens.width_unit.as_str())?;
+    out.set_item("printer_dpi", pens.printer_dpi)?;
+    Ok(out)
+}
+
 fn header_to_pydict<'py>(py: Python<'py>, header: &JwwHeader) -> PyResult<Bound<'py, PyDict>> {
     let out = PyDict::new_bound(py);
     out.set_item("version", header.version)?;
@@ -374,6 +408,12 @@ fn header_to_pydict<'py>(py: Python<'py>, header: &JwwHeader) -> PyResult<Bound<
         out.set_item("palette", palette_dict)?;
     } else {
         out.set_item("palette", py.None())?;
+    }
+
+    if let Some(pens) = &header.pens {
+        out.set_item("pens", pens_to_pydict(py, pens)?)?;
+    } else {
+        out.set_item("pens", py.None())?;
     }
 
     if let Some(line_types) = &header.line_types {

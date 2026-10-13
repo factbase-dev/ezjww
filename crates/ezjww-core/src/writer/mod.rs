@@ -14,7 +14,7 @@ mod validate;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
-use crate::header::{JwwLineTypes, JwwPalette, LayerGroupHeader, LayerHeader, TextPreset};
+use crate::header::{JwwLineTypes, JwwPalette, JwwPens, LayerGroupHeader, LayerHeader, TextPreset};
 use crate::model::{
     image_reference_content, Arc, BlockDef, Coord2D, EmbeddedImage, Entity, EntityBase, Line,
     Point, Text, IMAGE_TEMP_PREFIX,
@@ -38,6 +38,10 @@ pub struct JwwWriteOptions {
     pub palette: Option<JwwPalette>,
     pub line_types: Option<JwwLineTypes>,
     pub text_presets: Option<Vec<TextPreset>>,
+    /// Pen widths (screen dots, printer pens and their unit). `None` keeps the
+    /// template's: 1/1/2/../8 dots at 300 dpi, which makes an entity `pen_width`
+    /// a count of dots too; set `width_unit` to `hundredth_mm` to write widths in mm.
+    pub pens: Option<JwwPens>,
 }
 
 impl Default for JwwWriteOptions {
@@ -50,6 +54,7 @@ impl Default for JwwWriteOptions {
             palette: None,
             line_types: None,
             text_presets: None,
+            pens: None,
             layer_groups: std::array::from_fn(|g| LayerGroupHeader {
                 state: if g == 0 { 3 } else { 2 },
                 write_layer: 0,

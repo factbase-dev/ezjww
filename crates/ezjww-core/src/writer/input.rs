@@ -81,6 +81,7 @@ pub fn new_document() -> Value {
     doc.options.palette = header.palette;
     doc.options.line_types = header.line_types;
     doc.options.text_presets = header.text_presets;
+    doc.options.pens = header.pens;
     serde_json::to_value(doc).expect("finite defaults")
 }
 
@@ -311,6 +312,7 @@ fn options(value: &Value) -> Result<JwwWriteOptions, JwwWriteError> {
             "palette",
             "line_types",
             "text_presets",
+            "pens",
         ],
     )?;
     let groups = array(input.get("layer_groups")?, "options.layer_groups")?;
@@ -378,6 +380,7 @@ fn options(value: &Value) -> Result<JwwWriteOptions, JwwWriteError> {
         );
     }
     out.text_presets = input.optional("text_presets")?;
+    out.pens = input.optional("pens")?;
     // Flattened SXF patterns need an explicit key check (serde flatten does not
     // reliably reject unknown keys across a flattened nested structure).
     if let Some(slots) = value.pointer("/line_types/sxf").and_then(Value::as_array) {

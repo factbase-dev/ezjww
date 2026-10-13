@@ -41,6 +41,73 @@ def test_extended_cases_roundtrip_and_bounded_conversion(tmp_path):
             assert parsed["entities"][5]["base"]["pen_style"] == 106
 
 
+def test_pen_widths_are_written_and_read_back():
+    d = ezjww.new()
+    pens = d.options["pens"]
+    # the template: Jw_cad's defaults in printer dots at 300 dpi
+    assert (pens["width_unit"], pens["max_draw_width"], pens["printer_dpi"]) == ("dot", 100, 300)
+    assert [pen["width"] for pen in pens["printer"]] == [1, 1, 2, 3, 4, 5, 6, 7, 8, 1]
+    assert len(pens["extended_printer"]) == 257
+    pens.update(max_draw_width=-101, width_unit="hundredth_mm", printer_dpi=None)
+    for n, pen in enumerate(pens["printer"]):
+        pen["width"] = 10 + n
+        pen["point_radius"] = 0.25
+    pens["printer"][2]["color"] = 0x0000FF
+    pens["screen_widths"][3] = 4
+    pens["extended_printer"][18] = {"color": 0x00FF00, "width": 35, "point_radius": 0.18}
+    d.modelspace().add_line((0, 0), (10, 0))
+    back = d.source_document["header"]["pens"]
+    assert (back["width_unit"], back["max_draw_width"], back["printer_dpi"]) == (
+        "hundredth_mm",
+        -101,
+        None,
+    )
+    assert [pen["width"] for pen in back["printer"]] == list(range(10, 20))
+    assert back["printer"][2] == {"color": 0x0000FF, "width": 12, "point_radius": 0.25}
+    assert back["screen_widths"] == [1, 1, 1, 4, 1, 1, 1, 1, 1, 1]
+    assert back["extended_printer"][18] == {"color": 0x00FF00, "width": 35, "point_radius": 0.18}
+    assert back["extended_printer"][1]["width"] == 18  # untouched template entry
+    # the screen palette is not affected by printer pens
+    assert d.source_document["header"]["palette"]["pen_colors"] == d.options["palette"]["pen_colors"]
+
+    # dots at 600 dpi: the flag that records the dpi is rewritten
+    d = ezjww.new()
+    d.options["pens"]["printer_dpi"] = 600
+    assert d.source_document["header"]["pens"]["printer_dpi"] == 600
+    d.options["pens"]["printer_dpi"] = None
+    assert d.source_document["header"]["pens"]["printer_dpi"] is None
+    # no table at all keeps the template's
+    d.options["pens"] = None
+    assert d.source_document["header"]["pens"]["printer_dpi"] == 300
+
+
+def test_pen_widths_that_contradict_the_file_are_rejected():
+    for change, message in (
+        (lambda p: p.update(width_unit="hundredth_mm"), "options.pens.width_unit"),
+        (lambda p: p.update(printer_dpi=400), "options.pens.printer_dpi"),
+        (lambda p: p.update(extended_printer=p["extended_printer"][:10]), "extended_printer"),
+        (lambda p: p["printer"][1].update(point_radius=float("nan")), "point_radius"),
+        (lambda p: p.update(unknown=1), "options.pens"),
+    ):
+        d = ezjww.new()
+        change(d.options["pens"])
+        with pytest.raises(ValueError, match=message):
+            d.to_jww_bytes()
+
+
+def test_to_write_document_keeps_the_pen_table(tmp_path):
+    d = ezjww.new()
+    d.options["pens"]["printer"][2]["width"] = 7
+    d.modelspace().add_line((0, 0), (10, 0))
+    path = tmp_path / "pens.jww"
+    d.saveas(path)
+    converted = ezjww.to_write_document(ezjww.read_document(str(path)))
+    assert converted["document"]["options"]["pens"]["printer"][2]["width"] == 7
+    rewritten = tmp_path / "pens2.jww"
+    rewritten.write_bytes(ezjww.to_jww_bytes(converted["document"]))
+    assert ezjww.read_header(str(rewritten))["pens"]["printer"][2]["width"] == 7
+
+
 def test_color_allocation_respects_existing_pens_and_overflow():
     d = ezjww.new()
     d.options["palette"]["extended_colors"][17] = 0x123456

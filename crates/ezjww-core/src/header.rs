@@ -63,6 +63,101 @@ impl JwwPalette {
     }
 }
 
+/// Printer color, line width and point radius of one pen color.
+#[derive(Debug, Clone, Default, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct PrinterPen {
+    /// Printer color, normalized to `0x00BBGGRR`.
+    pub color: u32,
+    /// Line width in the unit of [`JwwPens::width_unit`].
+    pub width: u32,
+    /// Point radius in millimetres (0.1..=10).
+    pub point_radius: f64,
+}
+
+/// Unit of the pen widths of a file: `"hundredth_mm"` or `"dot"`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WidthUnit {
+    /// "線幅を1/100mm単位とする" is on: widths are in 1/100 mm.
+    HundredthMm,
+    /// Widths are printer dots at [`JwwPens::printer_dpi`].
+    Dot,
+}
+
+impl WidthUnit {
+    /// The unit `m_nMaxDrawWid` implies: negative means 1/100 mm.
+    pub fn from_max_draw_width(max_draw_width: i32) -> Self {
+        if max_draw_width < 0 {
+            Self::HundredthMm
+        } else {
+            Self::Dot
+        }
+    }
+
+    /// The unit as the Python and JSON APIs spell it.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::HundredthMm => "hundredth_mm",
+            Self::Dot => "dot",
+        }
+    }
+}
+
+/// Pen widths recorded in the JWW header.
+///
+/// Jw_cad draws and prints an entity whose own `pen_width` is 0 with the width
+/// of its pen color, so these settings decide the line widths of most drawings.
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct JwwPens {
+    /// Screen line width in dots per pen color number 0..=9 (`m_anPenWidth`, 1..=16).
+    pub screen_widths: [u32; 10],
+    /// Printer pen per pen color number 0..=9 (`m_aPrtPenColor`, `m_anPrtPenWidth`,
+    /// `m_adPrtTenHankei`). Index 0 is the background, 9 the construction line color.
+    pub printer: [PrinterPen; 10],
+    /// Printer pens of the extended pen color numbers 100..=356, in the same order as
+    /// [`JwwPalette::extended_colors`]. `None` before JWW version 420.
+    pub extended_printer: Option<Box<[PrinterPen]>>,
+    /// `m_nMaxDrawWid`: negative when "線幅を1/100mm単位とする" is on (-101, or
+    /// -(x+200) / -(x+400) from version 600), otherwise the maximum drawing width in dots.
+    pub max_draw_width: i32,
+    /// Unit of [`PrinterPen::width`], derived from `max_draw_width`.
+    pub width_unit: WidthUnit,
+    /// The dpi (300 or 600) that printer widths in dots refer to, recorded from
+    /// version 600. `None` when the file does not say.
+    pub printer_dpi: Option<u32>,
+}
+
+impl JwwPens {
+    /// Printer pen of a pen color number (1..=9, 100..=356), if the file defines it.
+    pub fn printer_pen(&self, pen_color: u16) -> Option<&PrinterPen> {
+        match pen_color {
+            1..=9 => Some(&self.printer[pen_color as usize]),
+            100..=356 => self
+                .extended_printer
+                .as_ref()
+                .and_then(|pens| pens.get((pen_color - 100) as usize)),
+            _ => None,
+        }
+    }
+
+    /// Printed line width of a pen color in millimetres, when the unit is known:
+    /// 1/100 mm directly, dots through [`JwwPens::printer_dpi`].
+    pub fn printer_width_mm(&self, pen_color: u16) -> Option<f64> {
+        let width = self.printer_pen(pen_color)?.width;
+        if width == 0 {
+            return None;
+        }
+        match self.width_unit {
+            WidthUnit::HundredthMm => Some(f64::from(width) / 100.0),
+            WidthUnit::Dot => self
+                .printer_dpi
+                .map(|dpi| f64::from(width) * 25.4 / f64::from(dpi)),
+        }
+    }
+}
+
 /// One pattern bit prints as `printer_pitch * PRINTER_PITCH_UNIT_MM` millimetres.
 ///
 /// Jw_cad stores, for its SXF-compatible line types, both the bit pattern with
@@ -251,6 +346,9 @@ pub struct JwwHeader {
     pub palette: Option<JwwPalette>,
     /// Only available when the layer name section was parsed successfully.
     pub line_types: Option<JwwLineTypes>,
+    /// Pen widths and printer pens (the line width of each pen color).
+    /// Only available when the layer name section was parsed successfully.
+    pub pens: Option<JwwPens>,
     pub text_presets: Option<Vec<TextPreset>>,
 }
 
@@ -304,19 +402,22 @@ pub(crate) fn parse_header_with_diagnostics(
     // Layer names and group names are stored later in the header block.
     // If this optional extraction fails, keep deterministic default names.
     let diagnostic_checkpoint = reader.decode_diagnostic_count();
-    let (palette, line_types) =
-        if parse_layer_names(&mut reader, version, &mut layer_groups).is_err() {
-            // This section is optional and layout-dependent. Discard diagnostics
-            // collected while probing bytes that were not confirmed as names.
-            reader.truncate_decode_diagnostics(diagnostic_checkpoint);
-            apply_default_layer_names(&mut layer_groups);
-            // The read position is already lost, so every later offset is unreliable.
-            (None, None)
-        } else {
-            apply_default_layer_names_for_blanks(&mut layer_groups);
-            match parse_display_settings(&mut reader, version) {
-                Ok((palette, line_types)) => (Some(palette), line_types),
-                Err(_) => (None, None),
+    let (palette, pens, line_types) =
+        match parse_layer_names(&mut reader, version, &mut layer_groups) {
+            Err(_) => {
+                // This section is optional and layout-dependent. Discard diagnostics
+                // collected while probing bytes that were not confirmed as names.
+                reader.truncate_decode_diagnostics(diagnostic_checkpoint);
+                apply_default_layer_names(&mut layer_groups);
+                // The read position is already lost, so every later offset is unreliable.
+                (None, None, None)
+            }
+            Ok(max_draw_width) => {
+                apply_default_layer_names_for_blanks(&mut layer_groups);
+                match parse_display_settings(&mut reader, version, max_draw_width) {
+                    Ok((palette, pens, line_types)) => (Some(palette), pens, line_types),
+                    Err(_) => (None, None, None),
+                }
             }
         };
 
@@ -329,6 +430,7 @@ pub(crate) fn parse_header_with_diagnostics(
             layer_groups,
             palette,
             line_types,
+            pens,
             text_presets: if (600..=700).contains(&version) {
                 parse_text_presets(data).ok()
             } else {
@@ -364,7 +466,8 @@ fn parse_text_presets(data: &[u8]) -> Result<Vec<TextPreset>, JwwError> {
 fn parse_display_settings(
     reader: &mut Reader<'_>,
     version: u32,
-) -> Result<(JwwPalette, Option<JwwLineTypes>), JwwError> {
+    max_draw_width: i32,
+) -> Result<(JwwPalette, Option<JwwPens>, Option<JwwLineTypes>), JwwError> {
     // Below version 300 the zoom and dummy sections have a different layout.
     if version < 300 {
         return Err(JwwError::UnexpectedEof("header.palette"));
@@ -382,30 +485,57 @@ fn parse_display_settings(
         + 8, // stub length for two-sided parallel lines
     )?;
 
-    // Screen color and pen width per pen color number.
+    // Screen color and pen width (dots) per pen color number.
     let mut pen_colors = [0u32; 10];
-    for color in &mut pen_colors {
+    let mut screen_widths = [0u32; 10];
+    for (color, width) in pen_colors.iter_mut().zip(&mut screen_widths) {
         *color = normalize_colorref(reader.read_u32()?);
-        let _pen_width = reader.read_u32()?;
+        *width = reader.read_u32()?;
     }
+    // Printer color, width and point radius per pen color number.
+    let pens = read_printer_pens(reader).ok().map(|printer| JwwPens {
+        screen_widths,
+        printer,
+        extended_printer: None,
+        max_draw_width,
+        width_unit: WidthUnit::from_max_draw_width(max_draw_width),
+        printer_dpi: None,
+    });
 
     if version < 420 {
-        // Older files end the color data here. The line types follow directly;
-        // a short or damaged section only loses them, not the palette.
-        let line_types = parse_line_type_patterns(reader).ok();
+        // Older files end the color data here. The line types follow directly; a short
+        // or damaged section only loses them and the printer pens, not the palette.
+        let line_types = pens
+            .as_ref()
+            .and_then(|_| parse_line_type_patterns(reader).ok());
         return Ok((
             JwwPalette {
                 pen_colors,
                 extended_colors: None,
             },
+            pens,
             line_types.filter(JwwLineTypes::is_plausible),
         ));
     }
 
+    let Some(mut pens) = pens else {
+        return Err(JwwError::UnexpectedEof("header.pens"));
+    };
     let mut line_types = parse_line_type_patterns(reader)?;
+    // Dot drawing, reverse draw/search and print flags: u32 x 11. The last one is
+    // m_nPrtDispOnlyNonDraw (0 or 1) plus, from version 600, 10 for 300 dpi or 20 for
+    // 600 dpi: the dpi that printer pen widths in dots refer to.
+    let mut print_flags = [0u32; 11];
+    for flag in &mut print_flags {
+        *flag = reader.read_u32()?;
+    }
+    pens.printer_dpi = match print_flags[10] {
+        10..=19 => Some(300),
+        20..=29 => Some(600),
+        _ => None,
+    };
     reader.skip(
-        44           // dot drawing, reverse draw/search and print flags: u32 x 11
-        + 20         // draw time, 2.5D start flag, horizontal eye angles: u32*5
+        20           // draw time, 2.5D start flag, horizontal eye angles: u32*5
         + 40         // 2.5D eye height, distance and vertical angle: f64 x 5
         + 32         // last used line length, box width/height, circle radius: f64 x 4
         + 8, // arbitrary solid color flag and its default value
@@ -423,7 +553,10 @@ fn parse_display_settings(
     // implausible, keep the palette and the standard line types read so far.
     let diagnostic_checkpoint = reader.decode_diagnostic_count();
     match parse_sxf_line_types(reader) {
-        Ok(sxf) => line_types.sxf = Some(sxf),
+        Ok((extended_printer, sxf)) => {
+            pens.extended_printer = Some(extended_printer);
+            line_types.sxf = Some(sxf);
+        }
         Err(_) => reader.truncate_decode_diagnostics(diagnostic_checkpoint),
     }
 
@@ -432,15 +565,31 @@ fn parse_display_settings(
             pen_colors,
             extended_colors: Some(colors),
         },
+        Some(pens),
         Some(line_types).filter(JwwLineTypes::is_plausible),
     ))
 }
 
-/// Reads the printer colors and the standard, random and double-length line types
+/// Reads the printer color, width and point radius of the pen color numbers 0..=9
 /// that follow the screen pen colors.
-fn parse_line_type_patterns(reader: &mut Reader<'_>) -> Result<JwwLineTypes, JwwError> {
-    reader.skip(160)?; // printer color, width, dot radius per pen: 10 x (u32*2 + f64)
+fn read_printer_pens(reader: &mut Reader<'_>) -> Result<[PrinterPen; 10], JwwError> {
+    let mut pens: [PrinterPen; 10] = Default::default();
+    for pen in &mut pens {
+        *pen = read_printer_pen(reader)?;
+    }
+    Ok(pens)
+}
 
+fn read_printer_pen(reader: &mut Reader<'_>) -> Result<PrinterPen, JwwError> {
+    Ok(PrinterPen {
+        color: normalize_colorref(reader.read_u32()?),
+        width: reader.read_u32()?,
+        point_radius: reader.read_f64()?,
+    })
+}
+
+/// Reads the standard, random and double-length line types that follow the printer pens.
+fn parse_line_type_patterns(reader: &mut Reader<'_>) -> Result<JwwLineTypes, JwwError> {
     let mut standard = Vec::with_capacity(8);
     for index in 0..8 {
         standard.push(read_line_type_pattern(
@@ -488,12 +637,15 @@ fn read_line_type_pattern(
 }
 
 /// Reads the SXF-compatible line types, starting right after the extended screen colors.
-fn parse_sxf_line_types(reader: &mut Reader<'_>) -> Result<Vec<SxfLineType>, JwwError> {
-    // Color name, printer color, printer width and dot radius per extended color.
+fn parse_sxf_line_types(
+    reader: &mut Reader<'_>,
+) -> Result<(Box<[PrinterPen]>, Vec<SxfLineType>), JwwError> {
+    // Color name, printer color, printer width and point radius per extended color.
+    let mut extended_printer = Vec::with_capacity(257);
     for index in 0..257 {
         let field = format!("header.extended_colors[{index}].name");
         let _name = reader.read_cstring_with_context(&field)?;
-        reader.skip(4 + 4 + 8)?;
+        extended_printer.push(read_printer_pen(reader)?);
     }
 
     let mut line_types = Vec::with_capacity(33);
@@ -516,7 +668,7 @@ fn parse_sxf_line_types(reader: &mut Reader<'_>) -> Result<Vec<SxfLineType>, Jww
         }
         line_type.segments_mm = lengths[..segments as usize].to_vec();
     }
-    Ok(line_types)
+    Ok((extended_printer.into_boxed_slice(), line_types))
 }
 
 impl JwwLineTypes {
@@ -537,19 +689,23 @@ const fn normalize_colorref(color: u32) -> u32 {
     color & 0x00FF_FFFF
 }
 
+/// Reads the layer and group names. Returns the "maximum line drawing width"
+/// (`m_nMaxDrawWid`) passed on the way: negative when the file stores pen widths
+/// in 1/100 mm, otherwise in printer dots.
 fn parse_layer_names(
     reader: &mut Reader<'_>,
     version: u32,
     layer_groups: &mut [LayerGroupHeader; 16],
-) -> Result<(), JwwError> {
+) -> Result<i32, JwwError> {
     // Only version >= 300 layout is currently supported for this section.
     if version < 300 {
         return Err(JwwError::UnexpectedEof("layer names"));
     }
 
     // Skip fields defined before layer names in jwdatafmt:
-    // 14 dummy DWORD + 5 dimension DWORD + 1 dummy DWORD + max-draw-width DWORD.
-    reader.skip((14 + 5 + 1 + 1) * 4)?;
+    // 14 dummy DWORD + 5 dimension DWORD + 1 dummy DWORD, then read the max-draw-width DWORD.
+    reader.skip((14 + 5 + 1) * 4)?;
+    let max_draw_width = reader.read_u32()? as i32;
 
     // Printer/memory settings before names:
     // printer origin(x,y) [16]
@@ -573,7 +729,7 @@ fn parse_layer_names(
         group.name = reader.read_cstring_with_context(&field)?;
     }
 
-    Ok(())
+    Ok(max_draw_width)
 }
 
 fn apply_default_layer_names(layer_groups: &mut [LayerGroupHeader; 16]) {
@@ -610,7 +766,7 @@ mod tests {
 
     use super::{
         is_jww_signature, normalize_colorref, parse_header, read_header_from_file, JwwError,
-        JwwPalette, LineTypePattern,
+        JwwPalette, LineTypePattern, PrinterPen, WidthUnit,
     };
 
     fn jww_samples_dir() -> PathBuf {
@@ -849,6 +1005,14 @@ mod tests {
     /// Printer colors and the standard, random and double-length line types.
     fn append_line_type_patterns(data: &mut Vec<u8>, unit_dots: u32, printer_pitch: u32) {
         data.extend_from_slice(&[0u8; 160]); // printer colors
+        append_line_type_patterns_after_printer_pens(data, unit_dots, printer_pitch);
+    }
+
+    fn append_line_type_patterns_after_printer_pens(
+        data: &mut Vec<u8>,
+        unit_dots: u32,
+        printer_pitch: u32,
+    ) {
         for _ in 2..=9 {
             push_u32s(data, &[0x9999_9999, unit_dots, 1, printer_pitch]);
         }
@@ -957,6 +1121,71 @@ mod tests {
         assert_eq!(header.line_types, None);
     }
 
+    /// Offset of `m_nMaxDrawWid` in the synthetic header: after the memo, paper size,
+    /// write layer group, the 16 layer groups and the 14 + 5 + 1 dummy/dimension DWORDs.
+    const MAX_DRAW_WIDTH_OFFSET: usize = 12 + 1 + 8 + 16 * 148 + (14 + 5 + 1) * 4;
+
+    #[test]
+    fn pens_in_hundredth_millimetres_are_read_with_their_unit() {
+        let mut data = header_through_pen_colors(700);
+        data[MAX_DRAW_WIDTH_OFFSET..MAX_DRAW_WIDTH_OFFSET + 4]
+            .copy_from_slice(&(-101i32).to_le_bytes());
+        for n in 0..10u32 {
+            push_u32s(&mut data, &[0x0200_00FF, 10 + n]); // PALETTERGB marker, width
+            data.extend_from_slice(&0.5f64.to_le_bytes());
+        }
+        append_line_type_patterns_after_printer_pens(&mut data, 4, 10);
+        append_extended_colors(&mut data);
+        append_sxf_line_types(&mut data, b"", &[]);
+
+        let header = parse_header(&data).expect("header");
+        let pens = header.pens.expect("pens");
+        assert_eq!(pens.screen_widths, [1; 10]);
+        assert_eq!(pens.max_draw_width, -101);
+        assert_eq!(pens.width_unit, WidthUnit::HundredthMm);
+        assert_eq!(pens.printer_dpi, None);
+        assert_eq!(
+            pens.printer[2],
+            PrinterPen {
+                color: 0x0000_00FF,
+                width: 12,
+                point_radius: 0.5
+            }
+        );
+        assert_eq!(pens.printer_width_mm(2), Some(0.12));
+        assert_eq!(pens.printer_width_mm(0), None); // background, not a pen
+        let extended = pens.extended_printer.as_ref().expect("extended pens");
+        assert_eq!(extended.len(), 257);
+        assert_eq!(extended[18].width, 0);
+        assert_eq!(pens.printer_width_mm(118), None); // width 0: not set
+        assert_eq!(pens.printer_width_mm(357), None);
+    }
+
+    #[test]
+    fn pens_in_dots_use_the_recorded_dpi() {
+        let header = parse_header(&std::fs::read(jww_samples_dir().join("Test1.jww")).unwrap())
+            .expect("header");
+        let pens = header.pens.expect("pens");
+        assert_eq!(pens.screen_widths, [1, 1, 1, 1, 1, 1, 2, 3, 5, 1]);
+        assert_eq!(pens.max_draw_width, 100);
+        assert_eq!(pens.width_unit, WidthUnit::Dot);
+        assert_eq!(pens.printer_dpi, Some(300));
+        assert_eq!(
+            pens.printer[2],
+            PrinterPen {
+                color: 0x0000_0000,
+                width: 2,
+                point_radius: 0.3
+            }
+        );
+        assert_eq!(pens.printer_pen(8).map(|pen| pen.width), Some(8));
+        assert_eq!(pens.printer_width_mm(2), Some(2.0 * 25.4 / 300.0));
+        let extended = pens.extended_printer.as_ref().expect("extended pens");
+        assert_eq!(extended[1].width, 18);
+        assert_eq!(extended[1].point_radius, 0.18);
+        assert_eq!(pens.printer_width_mm(101), Some(18.0 * 25.4 / 300.0));
+    }
+
     #[test]
     fn line_types_before_version_420_have_no_sxf_section() {
         let mut data = header_through_pen_colors(351);
@@ -967,12 +1196,18 @@ mod tests {
         let line_types = header.line_types.expect("line types");
         assert_eq!(line_types.standard[7].number, 9);
         assert_eq!(line_types.sxf, None);
+        let pens = header.pens.expect("pens");
+        assert_eq!(pens.extended_printer, None);
+        assert_eq!(pens.width_unit, WidthUnit::Dot);
+        assert_eq!(pens.printer_dpi, None);
 
-        // A file that ends right after the pen colors still has its palette.
+        // A file that ends right after the pen colors still has its palette,
+        // and neither line types nor pens.
         let data = header_through_pen_colors(351);
         let header = parse_header(&data).expect("header");
         assert!(header.palette.is_some());
         assert_eq!(header.line_types, None);
+        assert_eq!(header.pens, None);
     }
 
     #[test]

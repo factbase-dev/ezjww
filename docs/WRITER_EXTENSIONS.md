@@ -40,8 +40,20 @@ Jw_cad normalizes reserved pen 100 to 1 on save. Use 101–356 for retained SXF 
 
 `new_jww_document()` supplies editable default tables. `palette.pen_colors` has
 10 entries (index 0 is background), and `extended_colors` has 257 entries indexed
-by `pen - 100`. Changed colors patch both screen and printer colors; native
-line-width settings retain template defaults. This is not full print-style editing.
+by `pen - 100`. Changed colors patch both screen and printer colors.
+
+`pens` holds the line widths (`JwwPens`, as the reader reports them): `screen_widths`
+(10 entries, dots), `printer` (10 entries of `color`, `width`, `point_radius`),
+`extended_printer` (257 entries or `null`), `max_draw_width`, `width_unit` and
+`printer_dpi`. Jw_cad prints an entity with `pen_width` 0 at its pen color's width,
+so this table sets the widths of most lines. The template keeps Jw_cad's defaults:
+dots at 300 dpi (`width_unit: "dot"`, pens 1-8 print 1, 2, ..., 8 dots), which also
+makes an explicit entity `pen_width` a count of dots. To write widths in 1/100 mm
+set `max_draw_width` to `-101` and `width_unit` to `"hundredth_mm"` (the
+"線幅を1/100mm単位とする" setting); the writer rejects a unit that contradicts
+`max_draw_width`, a `printer_dpi` other than 300, 600 or `null`, and an
+`extended_printer` that is not 257 entries. Printer colors given here override
+the ones `palette` derives from the screen colors.
 
 `line_types` contains 8 standard, 5 random, 4 double-length and 33 SXF slots.
 Slot numbers must remain in order. Standard/double patterns use a 32-bit pattern,

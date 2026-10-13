@@ -271,6 +271,7 @@ mod tests {
             }),
             palette: None,
             line_types: None,
+            pens: None,
             text_presets: None,
         }
     }

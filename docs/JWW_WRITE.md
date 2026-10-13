@@ -231,7 +231,7 @@ also returns a mutable entity reference.
 | Text `base.pen_width` | 0 or the validated dimension flag combinations |
 | Entity `base.group` | 0; curve groups are unsupported |
 | Entity `base.flag` | 0 or supported dimension flags; see extension guide |
-| `palette`, `line_types`, `text_presets` | Optional reader-shaped tables; defaults supplied by `new_jww_document()` |
+| `palette`, `line_types`, `text_presets`, `pens` | Optional reader-shaped tables; defaults supplied by `new_jww_document()`. `pens` is the line width of each pen color; see the extension guide |
 
 Only the current group may have state 3, and each group must have exactly one
 state-3 layer matching its `write_layer`. Change both the index and states when

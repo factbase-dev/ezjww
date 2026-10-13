@@ -28,7 +28,8 @@ pub(super) fn write(
             archive.u32(layer.protect);
         }
     }
-    archive.bytes(&TEMPLATE[TABLE_END..NAMES_START]);
+    let template = configured_template(options)?;
+    archive.bytes(&template[TABLE_END..NAMES_START]);
     for (g, group) in options.layer_groups.iter().enumerate() {
         for (l, layer) in group.layers.iter().enumerate() {
             archive.cstring(
@@ -40,7 +41,7 @@ pub(super) fn write(
     for (g, group) in options.layer_groups.iter().enumerate() {
         archive.cstring(&group.name, &format!("options.layer_groups[{g}].name"))?;
     }
-    archive.bytes(&configured_template(options)?[NAMES_END..]);
+    archive.bytes(&template[NAMES_END..]);
     Ok(())
 }
 
@@ -49,8 +50,14 @@ pub(super) fn write(
 fn configured_template(options: &JwwWriteOptions) -> Result<Vec<u8>, JwwWriteError> {
     use crate::reader::Reader;
     let mut data = TEMPLATE.to_vec();
+    // m_nMaxDrawWid: the last DWORD of the 84 bytes after the layer tables
+    // (14 dummies, 5 dimension settings, 1 dummy, then this).
+    let max_draw_width = TABLE_END + (14 + 5 + 1) * 4;
     let pens = NAMES_END + 464;
     let patterns = pens + 10 * 8 + 10 * 16;
+    // Eleventh of the print flags after the line types: m_nPrtDispOnlyNonDraw plus
+    // 10 for 300 dpi or 20 for 600 dpi (the dpi that widths in dots refer to).
+    let dpi_flag = patterns + 8 * 16 + 5 * 20 + 4 * 16 + 10 * 4;
     let extended = patterns + 8 * 16 + 5 * 20 + 4 * 16 + 44 + 20 + 40 + 32 + 8;
     let mut reader = Reader::new(TEMPLATE);
     reader.skip(extended + 257 * 8).expect("template offset");
@@ -87,6 +94,69 @@ fn configured_template(options: &JwwWriteOptions) -> Result<Vec<u8>, JwwWriteErr
                 patch_u32(&mut data, printers[i], color);
             }
         }
+    }
+    if let Some(pens_table) = &options.pens {
+        let expected = crate::header::WidthUnit::from_max_draw_width(pens_table.max_draw_width);
+        if pens_table.width_unit != expected {
+            return Err(JwwWriteError::invalid(
+                "options.pens.width_unit",
+                format!(
+                    "{} does not match max_draw_width {} ({})",
+                    pens_table.width_unit.as_str(),
+                    pens_table.max_draw_width,
+                    expected.as_str()
+                ),
+            ));
+        }
+        if !matches!(pens_table.printer_dpi, None | Some(300) | Some(600)) {
+            return Err(JwwWriteError::invalid(
+                "options.pens.printer_dpi",
+                "expected 300, 600 or null",
+            ));
+        }
+        let patch_pen = |data: &mut [u8], at: usize, pen: &crate::header::PrinterPen| {
+            if !pen.point_radius.is_finite() || pen.point_radius < 0.0 {
+                return Err(JwwWriteError::invalid(
+                    "options.pens.point_radius",
+                    "expected a finite, non-negative radius",
+                ));
+            }
+            // A color still at its template value keeps whatever `palette` derived
+            // from the screen color (and the template's own bytes, marker included).
+            let template_color =
+                u32::from_le_bytes(TEMPLATE[at..at + 4].try_into().unwrap()) & 0xffffff;
+            if pen.color != template_color {
+                data[at..at + 4].copy_from_slice(&pen.color.to_le_bytes());
+            }
+            data[at + 4..at + 8].copy_from_slice(&pen.width.to_le_bytes());
+            data[at + 8..at + 16].copy_from_slice(&pen.point_radius.to_le_bytes());
+            Ok(())
+        };
+        patch_u32(&mut data, max_draw_width, pens_table.max_draw_width as u32);
+        for (i, &width) in pens_table.screen_widths.iter().enumerate() {
+            patch_u32(&mut data, pens + i * 8 + 4, width);
+        }
+        for (i, pen) in pens_table.printer.iter().enumerate() {
+            patch_pen(&mut data, pens + 80 + i * 16, pen)?;
+        }
+        if let Some(extended_pens) = &pens_table.extended_printer {
+            if extended_pens.len() != 257 {
+                return Err(JwwWriteError::invalid(
+                    "options.pens.extended_printer",
+                    "expected 257 entries (pen colors 100-356)",
+                ));
+            }
+            for (i, pen) in extended_pens.iter().enumerate() {
+                patch_pen(&mut data, printers[i], pen)?;
+            }
+        }
+        let flag = u32::from_le_bytes(data[dpi_flag..dpi_flag + 4].try_into().unwrap()) % 10;
+        let dpi_part = match pens_table.printer_dpi {
+            Some(300) => 10,
+            Some(600) => 20,
+            _ => 0,
+        };
+        patch_u32(&mut data, dpi_flag, flag + dpi_part);
     }
     if let Some(presets) = &options.text_presets {
         for (i, preset) in presets.iter().enumerate() {

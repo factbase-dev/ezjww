@@ -19,6 +19,19 @@ class JwwPalette(TypedDict):
     pen_colors: list[int]
     extended_colors: list[int] | None
 
+class PrinterPen(TypedDict):
+    color: int
+    width: int
+    point_radius: float
+
+class JwwPens(TypedDict):
+    screen_widths: list[int]
+    printer: list[PrinterPen]
+    extended_printer: list[PrinterPen] | None
+    max_draw_width: int
+    width_unit: Literal["hundredth_mm", "dot"]
+    printer_dpi: int | None
+
 class LineTypePattern(TypedDict):
     number: int
     pattern: int
@@ -65,6 +78,7 @@ class JwwHeader(TypedDict):
     layer_groups: list[LayerGroupHeader]
     palette: JwwPalette | None
     line_types: JwwLineTypes | None
+    pens: JwwPens | None
     text_presets: list[TextPreset] | None
 
 class EntityBase(TypedDict):

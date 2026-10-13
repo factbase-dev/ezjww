@@ -139,6 +139,12 @@ substitution. JWC retains its existing width/height ratio.
 
 ### Line type settings
 
+A JWW file also records the line width of each pen color (`header["pens"]`:
+screen dots, printer `width` per pen with its unit, `"hundredth_mm"` or `"dot"`
+at `printer_dpi`). An entity whose `pen_width` is 0 prints at its pen color's
+width, so this table is the line width of most drawings. The writer takes the
+same table as `options["pens"]`.
+
 A JWW file records how each of its line types is drawn. `read_header` and
 `read_document` report them as `header["line_types"]` (`None` for files older
 than version 3.00):

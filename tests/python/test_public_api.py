@@ -82,6 +82,26 @@ class PublicApiTests(unittest.TestCase):
         self.assertEqual(palette["extended_colors"][1], 0x000000)
         self.assertEqual(palette["extended_colors"][2], 0x0000FF)
 
+    def test_read_header_exposes_the_pen_widths(self):
+        header = ezjww.read_header(str(sample_path()))
+        pens = header["pens"]
+        self.assertIsNotNone(pens)
+        assert pens is not None
+        # Test1.jww keeps its widths in printer dots at 300 dpi
+        self.assertEqual(pens["width_unit"], "dot")
+        self.assertEqual(pens["max_draw_width"], 100)
+        self.assertEqual(pens["printer_dpi"], 300)
+        self.assertEqual(pens["screen_widths"], [1, 1, 1, 1, 1, 1, 2, 3, 5, 1])
+        self.assertEqual(len(pens["printer"]), 10)
+        self.assertEqual(
+            pens["printer"][2], {"color": 0x000000, "width": 2, "point_radius": 0.3}
+        )
+        self.assertEqual([pen["width"] for pen in pens["printer"]], [1, 1, 2, 3, 4, 5, 6, 7, 8, 1])
+        extended = pens["extended_printer"]
+        assert extended is not None
+        self.assertEqual(len(extended), 257)
+        self.assertEqual(extended[1], {"color": 0x000000, "width": 18, "point_radius": 0.18})
+
     def test_read_header_exposes_the_line_type_settings(self):
         header = ezjww.read_header(str(sample_path()))
         line_types = header["line_types"]

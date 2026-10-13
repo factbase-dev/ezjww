@@ -20,6 +20,21 @@ export interface JwwPalette {
   extended_colors: number[] | null;
 }
 
+export interface PrinterPen {
+  color: number;
+  width: number;
+  point_radius: number;
+}
+
+export interface JwwPens {
+  screen_widths: number[];
+  printer: PrinterPen[];
+  extended_printer: PrinterPen[] | null;
+  max_draw_width: number;
+  width_unit: "hundredth_mm" | "dot";
+  printer_dpi: number | null;
+}
+
 export interface LineTypePattern {
   number: number;
   pattern: number;
@@ -64,6 +79,7 @@ export interface JwwHeader {
   layer_groups: LayerGroupHeader[];
   palette: JwwPalette | null;
   line_types: JwwLineTypes | null;
+  pens: JwwPens | null;
   text_presets: TextPreset[] | null;
 }
 
@@ -256,6 +272,7 @@ export interface JwwWriteOptions {
   palette?: JwwPalette | null;
   line_types?: JwwLineTypes | null;
   text_presets?: TextPreset[] | null;
+  pens?: JwwPens | null;
 }
 
 export interface JwwWriteLine extends LinePayload {
